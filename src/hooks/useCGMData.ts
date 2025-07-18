@@ -1,12 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CGMDataResponse, CurrentGlucose, LoadingState, AppError } from '../types';
 import { api } from '../services/api';
-// TODO: Enable smart polling in future iteration
-// import { SmartPollingAnalyzer, PollingStrategy } from '../utils/smartPolling';
+import { SmartPollingAnalyzer, PollingStrategy } from '../utils/smartPolling';
 
 interface UseCGMDataOptions {
   hours?: number;
-  refreshInterval?: number; // This will be used as fallback, smart polling will override
+  refreshInterval?: number; // Fallback interval when smart polling is disabled
   autoRefresh?: boolean;
   enableSmartPolling?: boolean;
 }
@@ -21,6 +20,10 @@ interface UseCGMDataReturn {
   error: AppError | null;
   lastUpdated: Date | null;
   
+  // Smart polling info
+  pollingStrategy: PollingStrategy | null;
+  nextReadingIn: string;
+  
   // Actions
   refresh: () => Promise<void>;
   clearError: () => void;
@@ -30,7 +33,8 @@ export const useCGMData = (options: UseCGMDataOptions = {}): UseCGMDataReturn =>
   const {
     hours = 24,
     refreshInterval = 5 * 60 * 1000, // 5 minutes
-    autoRefresh = true
+    autoRefresh = true,
+    enableSmartPolling = true
   } = options;
 
   // State
@@ -39,6 +43,12 @@ export const useCGMData = (options: UseCGMDataOptions = {}): UseCGMDataReturn =>
   const [loading, setLoading] = useState<LoadingState>('idle');
   const [error, setError] = useState<AppError | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [pollingStrategy, setPollingStrategy] = useState<PollingStrategy | null>(null);
+  const [nextReadingIn, setNextReadingIn] = useState<string>('Unknown');
+
+  // Refs for managing timers
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const countdownRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch data function
   const fetchData = useCallback(async () => {
@@ -59,7 +69,19 @@ export const useCGMData = (options: UseCGMDataOptions = {}): UseCGMDataReturn =>
       setLastUpdated(new Date());
       setLoading('success');
 
-      console.log(`✅ CGM data loaded: ${historicalData.data.length} readings`);
+      // Update polling strategy with new data
+      if (enableSmartPolling && historicalData.data.length > 0) {
+        const strategy = SmartPollingAnalyzer.getPollingStrategy(historicalData.data);
+        setPollingStrategy(strategy);
+        
+        console.log(`✅ CGM data loaded: ${historicalData.data.length} readings`);
+        console.log(`🧠 Smart polling: ${strategy.mode} mode, next check in ${strategy.nextInterval / 1000}s`);
+        if (strategy.nextExpectedReading) {
+          console.log(`⏰ Next reading expected: ${strategy.nextExpectedReading.toLocaleTimeString()}`);
+        }
+      } else {
+        console.log(`✅ CGM data loaded: ${historicalData.data.length} readings`);
+      }
 
     } catch (err: any) {
       console.error('❌ Failed to fetch CGM data:', err);
@@ -74,7 +96,7 @@ export const useCGMData = (options: UseCGMDataOptions = {}): UseCGMDataReturn =>
       setError(appError);
       setLoading('error');
     }
-  }, [hours]);
+  }, [hours, enableSmartPolling]);
 
   // Manual refresh function
   const refresh = useCallback(async () => {
@@ -94,21 +116,71 @@ export const useCGMData = (options: UseCGMDataOptions = {}): UseCGMDataReturn =>
     fetchData();
   }, [fetchData]);
 
-  // Auto-refresh setup
+  // Smart polling setup
   useEffect(() => {
     if (!autoRefresh) return;
 
-    const interval = setInterval(() => {
-      console.log('🔄 Auto-refreshing CGM data...');
-      fetchData();
-    }, refreshInterval);
+    const setupNextRefresh = () => {
+      // Clear existing interval
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+      }
 
-    return () => clearInterval(interval);
-  }, [autoRefresh, refreshInterval, fetchData]);
+      let nextInterval = refreshInterval; // Fallback
+
+      if (enableSmartPolling && pollingStrategy) {
+        nextInterval = pollingStrategy.nextInterval;
+        const mode = pollingStrategy.mode === 'intensive' ? '🔥 INTENSIVE' : '😌 Normal';
+        console.log(`🔄 ${mode} polling: next check in ${nextInterval / 1000}s`);
+      } else {
+        console.log(`🔄 Standard polling: next check in ${nextInterval / 1000}s`);
+      }
+
+      intervalRef.current = setTimeout(() => {
+        fetchData();
+      }, nextInterval);
+    };
+
+    // Set up initial refresh
+    setupNextRefresh();
+    
+    return () => {
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+      }
+    };
+  }, [autoRefresh, enableSmartPolling, pollingStrategy, fetchData, refreshInterval]);
+
+  // Countdown timer for next reading
+  useEffect(() => {
+    if (!enableSmartPolling || !pollingStrategy?.nextExpectedReading) {
+      setNextReadingIn('Unknown');
+      return;
+    }
+
+    const updateCountdown = () => {
+      const timeStr = SmartPollingAnalyzer.formatTimeUntilNext(pollingStrategy.nextExpectedReading);
+      setNextReadingIn(timeStr);
+    };
+
+    // Update immediately
+    updateCountdown();
+
+    // Update every 10 seconds
+    countdownRef.current = setInterval(updateCountdown, 10000);
+
+    return () => {
+      if (countdownRef.current) {
+        clearInterval(countdownRef.current);
+      }
+    };
+  }, [enableSmartPolling, pollingStrategy]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      if (intervalRef.current) clearTimeout(intervalRef.current);
+      if (countdownRef.current) clearInterval(countdownRef.current);
       setLoading('idle');
       setError(null);
     };
@@ -120,6 +192,8 @@ export const useCGMData = (options: UseCGMDataOptions = {}): UseCGMDataReturn =>
     loading,
     error,
     lastUpdated,
+    pollingStrategy,
+    nextReadingIn,
     refresh,
     clearError
   };

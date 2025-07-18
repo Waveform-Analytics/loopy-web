@@ -9,8 +9,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   ReferenceArea,
-  Dot,
-  Brush
+  Dot
 } from 'recharts';
 import {
   Box,
@@ -19,16 +18,8 @@ import {
   Typography,
   Chip,
   useTheme,
-  useMediaQuery,
-  IconButton,
-  Tooltip
+  useMediaQuery
 } from '@mui/material';
-import {
-  ZoomIn,
-  ZoomOut,
-  CenterFocusStrong,
-  Timeline
-} from '@mui/icons-material';
 import { CGMReading } from '../../types';
 import { TimeRangeSelector, TimeRange } from './TimeRangeSelector';
 
@@ -110,10 +101,6 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
   // Local state for time range and live mode
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>(defaultTimeRange);
   const [isLiveMode, setIsLiveMode] = useState(propIsLiveMode);
-  
-  // Zoom state management
-  const [zoomDomain, setZoomDomain] = useState<[number, number] | null>(null);
-  const [brushEnabled, setBrushEnabled] = useState(!isMobile); // Disable brush on mobile by default
 
   const getGlucoseColor = useCallback((glucose: number) => {
     if (glucose < 70) return '#DC143C';    // Red for low
@@ -207,8 +194,6 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
   // Handle time range changes
   const handleTimeRangeChange = (newRange: TimeRange) => {
     setSelectedTimeRange(newRange);
-    // Reset zoom when changing time ranges to avoid confusion
-    setZoomDomain(null);
   };
 
   // Handle live mode toggle
@@ -216,69 +201,6 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
     const newLiveMode = !isLiveMode;
     setIsLiveMode(newLiveMode);
     onLiveModeChange?.(newLiveMode);
-  };
-
-  // Get the full domain of the current data
-  const fullDomain = useMemo((): [number, number] | null => {
-    if (chartData.length === 0) return null;
-    const timestamps = chartData.map(d => d.timestamp);
-    return [Math.min(...timestamps), Math.max(...timestamps)];
-  }, [chartData]);
-
-  // Get the current display domain (either zoomed or full)
-  const displayDomain = zoomDomain || fullDomain;
-
-  // Zoom control functions
-  const handleZoomIn = () => {
-    if (!displayDomain) return;
-    
-    const [start, end] = displayDomain;
-    const range = end - start;
-    const center = start + range / 2;
-    const newRange = range * 0.6; // Zoom in by 40%
-    
-    setZoomDomain([
-      Math.max(fullDomain?.[0] || start, center - newRange / 2),
-      Math.min(fullDomain?.[1] || end, center + newRange / 2)
-    ]);
-  };
-
-  const handleZoomOut = () => {
-    if (!displayDomain || !fullDomain) return;
-    
-    const [start, end] = displayDomain;
-    const range = end - start;
-    const center = start + range / 2;
-    const newRange = range * 1.4; // Zoom out by 40%
-    
-    const newStart = Math.max(fullDomain[0], center - newRange / 2);
-    const newEnd = Math.min(fullDomain[1], center + newRange / 2);
-    
-    // If we're close to full domain, just reset to full
-    if (newEnd - newStart >= (fullDomain[1] - fullDomain[0]) * 0.9) {
-      setZoomDomain(null);
-    } else {
-      setZoomDomain([newStart, newEnd]);
-    }
-  };
-
-  const handleZoomReset = () => {
-    setZoomDomain(null);
-  };
-
-  const handleBrushChange = (brushData: any) => {
-    if (brushData && brushData.startIndex !== undefined && brushData.endIndex !== undefined) {
-      const startTimestamp = chartData[brushData.startIndex]?.timestamp;
-      const endTimestamp = chartData[brushData.endIndex]?.timestamp;
-      
-      if (startTimestamp && endTimestamp) {
-        setZoomDomain([startTimestamp, endTimestamp]);
-      }
-    }
-  };
-
-  const toggleBrush = () => {
-    setBrushEnabled(!brushEnabled);
   };
 
   const formatXAxisTick = (tickItem: number) => {
@@ -341,78 +263,6 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
           />
         </Box>
 
-        {/* Zoom Controls */}
-        <Box 
-          display="flex" 
-          justifyContent="space-between" 
-          alignItems="center" 
-          mb={1}
-          sx={{
-            p: 1,
-            bgcolor: 'action.hover',
-            borderRadius: 1,
-            border: 1,
-            borderColor: 'divider'
-          }}
-        >
-          <Box display="flex" alignItems="center" gap={0.5}>
-            <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
-              Zoom:
-            </Typography>
-            <Tooltip title="Zoom In">
-              <IconButton 
-                size="small" 
-                onClick={handleZoomIn}
-                disabled={!displayDomain}
-              >
-                <ZoomIn fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Zoom Out">
-              <IconButton 
-                size="small" 
-                onClick={handleZoomOut}
-                disabled={!zoomDomain}
-              >
-                <ZoomOut fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Reset Zoom">
-              <IconButton 
-                size="small" 
-                onClick={handleZoomReset}
-                disabled={!zoomDomain}
-              >
-                <CenterFocusStrong fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-
-          <Box display="flex" alignItems="center" gap={0.5}>
-            {!isMobile && (
-              <Tooltip title={brushEnabled ? "Hide Zoom Selector" : "Show Zoom Selector"}>
-                <IconButton 
-                  size="small" 
-                  onClick={toggleBrush}
-                  color={brushEnabled ? "primary" : "default"}
-                >
-                  <Timeline fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            )}
-            {zoomDomain && (
-              <Chip 
-                label="Zoomed" 
-                size="small" 
-                color="primary" 
-                variant="outlined"
-                onDelete={handleZoomReset}
-                sx={{ fontSize: '0.7rem' }}
-              />
-            )}
-          </Box>
-        </Box>
-
         {/* Chart */}
         <Box sx={{ width: '100%', height: `${height}px` }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -432,7 +282,7 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
                 dataKey="timestamp"
                 type="number"
                 scale="time"
-                domain={displayDomain || ['dataMin', 'dataMax']}
+                domain={['dataMin', 'dataMax']}
                 tickFormatter={formatXAxisTick}
                 fontSize={isMobile ? 10 : 12}
                 interval="preserveStartEnd"
@@ -482,44 +332,18 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
                 activeDot={{ r: 5, stroke: theme.palette.primary.main, strokeWidth: 2 }}
                 connectNulls={false}
               />
-              
-              {/* Brush for zoom selection - only show on desktop when enabled */}
-              {brushEnabled && !isMobile && (
-                <Brush
-                  dataKey="timestamp"
-                  height={30}
-                  stroke={theme.palette.primary.main}
-                  fill={theme.palette.primary.light}
-                  fillOpacity={0.1}
-                  onChange={handleBrushChange}
-                  tickFormatter={formatXAxisTick}
-                />
-              )}
             </LineChart>
           </ResponsiveContainer>
         </Box>
 
-        {/* Mobile instructions */}
-        {isMobile && (
-          <Typography 
-            variant="caption" 
-            color="text.secondary" 
-            sx={{ mt: 1, display: 'block', textAlign: 'center' }}
-          >
-            📱 Use zoom buttons above • Touch chart to see details
-          </Typography>
-        )}
-        
-        {/* Desktop instructions */}
-        {!isMobile && brushEnabled && (
-          <Typography 
-            variant="caption" 
-            color="text.secondary" 
-            sx={{ mt: 1, display: 'block', textAlign: 'center' }}
-          >
-            💻 Drag the timeline below chart to zoom • Use zoom buttons for precise control
-          </Typography>
-        )}
+        {/* Instructions */}
+        <Typography 
+          variant="caption" 
+          color="text.secondary" 
+          sx={{ mt: 1, display: 'block', textAlign: 'center' }}
+        >
+          {isMobile ? '📱 Touch chart to see details • Use time range buttons above' : '💻 Hover over chart for details • Select time range above'}
+        </Typography>
       </CardContent>
     </Card>
   );

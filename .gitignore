@@ -79,7 +79,7 @@ Thumbs.db
 
 # Gatsby files
 .cache/
-public
+# public - NOTE: In React apps, keep public/ folder. Only ignore for Gatsby/Next.js builds
 
 # Storybook build outputs
 .out

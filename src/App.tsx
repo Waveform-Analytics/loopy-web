@@ -45,11 +45,14 @@ function App() {
     loading: dataLoading, 
     error: dataError, 
     lastUpdated,
+    pollingStrategy,
+    nextReadingIn,
     refresh: refreshData 
   } = useCGMData({ 
     hours: 24, // Always fetch 24h of data for filtering
     autoRefresh: true,
-    refreshInterval: 5 * 60 * 1000 // 5 minutes
+    refreshInterval: 5 * 60 * 1000, // Fallback interval
+    enableSmartPolling: true // Enable smart adaptive polling
   });
 
   const testConnections = async () => {
@@ -295,8 +298,26 @@ function App() {
           </Grid>
         )}
 
-        {/* Last updated info */}
-        {lastUpdated && (
+        {/* Smart polling info */}
+        {pollingStrategy && (
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Typography variant="caption" color="text.secondary">
+              Last updated: {lastUpdated?.toLocaleTimeString() || 'Never'}
+            </Typography>
+            <br />
+            <Typography variant="caption" color="text.secondary">
+              Polling: {pollingStrategy.mode === 'intensive' ? '🔥 Intensive' : '😌 Normal'} • Next reading in: {nextReadingIn}
+            </Typography>
+            {pollingStrategy.confidence && (
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                Prediction confidence: {Math.round(pollingStrategy.confidence * 100)}%
+              </Typography>
+            )}
+          </Box>
+        )}
+        
+        {/* Fallback for when smart polling is disabled */}
+        {!pollingStrategy && lastUpdated && (
           <Typography 
             variant="caption" 
             color="text.secondary" 

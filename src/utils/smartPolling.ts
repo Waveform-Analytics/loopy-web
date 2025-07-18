@@ -4,43 +4,41 @@ export interface PollingStrategy {
   nextInterval: number;
   mode: 'normal' | 'intensive';
   nextExpectedReading: Date | null;
-  confidence: number; // 0-1, how confident we are in the prediction
+  confidence: number;
 }
 
 /**
- * Analyzes CGM reading patterns to predict the next reading time
- * and determine optimal polling strategy
+ * Smart polling analyzer for CGM readings
+ * Predicts when next reading should arrive and adjusts polling frequency
  */
 export class SmartPollingAnalyzer {
   private static readonly DEFAULT_CGM_INTERVAL = 5 * 60 * 1000; // 5 minutes
-  private static readonly INTENSIVE_POLLING_INTERVAL = 45 * 1000; // 45 seconds
-  private static readonly NORMAL_POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
-  private static readonly INTENSIVE_WINDOW = 2 * 60 * 1000; // Start intensive polling 2 minutes before expected reading
+  private static readonly INTENSIVE_POLLING = 45 * 1000; // 45 seconds when expecting reading
+  private static readonly NORMAL_POLLING = 5 * 60 * 1000; // 5 minutes normal
+  private static readonly INTENSIVE_WINDOW = 2 * 60 * 1000; // Start intensive 2min before expected
 
   /**
-   * Calculate the average interval between recent CGM readings
+   * Calculate average interval between recent readings
    */
-  static calculateAverageInterval(readings: CGMReading[]): number {
+  static getAverageInterval(readings: CGMReading[]): number {
     if (readings.length < 2) {
       return this.DEFAULT_CGM_INTERVAL;
     }
 
-    // Sort readings by time (most recent first)
-    const sortedReadings = [...readings].sort((a, b) => 
+    // Sort by time (most recent first)
+    const sorted = [...readings].sort((a, b) => 
       new Date(b.dateString || b.datetime).getTime() - 
       new Date(a.dateString || a.datetime).getTime()
     );
 
-    // Calculate intervals between last 5-10 readings for better accuracy
-    const intervalsToCheck = Math.min(10, sortedReadings.length - 1);
+    // Calculate intervals between last 5 readings for accuracy
     const intervals: number[] = [];
-
-    for (let i = 0; i < intervalsToCheck; i++) {
-      const current = new Date(sortedReadings[i].dateString || sortedReadings[i].datetime);
-      const previous = new Date(sortedReadings[i + 1].dateString || sortedReadings[i + 1].datetime);
+    for (let i = 0; i < Math.min(5, sorted.length - 1); i++) {
+      const current = new Date(sorted[i].dateString || sorted[i].datetime);
+      const previous = new Date(sorted[i + 1].dateString || sorted[i + 1].datetime);
       const interval = current.getTime() - previous.getTime();
       
-      // Only include reasonable intervals (3-8 minutes) to filter out anomalies
+      // Only include reasonable intervals (3-8 minutes)
       if (interval >= 3 * 60 * 1000 && interval <= 8 * 60 * 1000) {
         intervals.push(interval);
       }
@@ -50,64 +48,52 @@ export class SmartPollingAnalyzer {
       return this.DEFAULT_CGM_INTERVAL;
     }
 
-    // Return median interval for better robustness against outliers
+    // Return median for robustness
     intervals.sort((a, b) => a - b);
-    const medianIndex = Math.floor(intervals.length / 2);
+    const mid = Math.floor(intervals.length / 2);
     return intervals.length % 2 === 0 
-      ? (intervals[medianIndex - 1] + intervals[medianIndex]) / 2
-      : intervals[medianIndex];
+      ? (intervals[mid - 1] + intervals[mid]) / 2
+      : intervals[mid];
   }
 
   /**
-   * Predict when the next CGM reading should arrive
+   * Predict when the next reading should arrive
    */
   static predictNextReading(readings: CGMReading[]): { time: Date | null; confidence: number } {
     if (readings.length === 0) {
       return { time: null, confidence: 0 };
     }
 
-    // Get the most recent reading
-    const sortedReadings = [...readings].sort((a, b) => 
+    const sorted = [...readings].sort((a, b) => 
       new Date(b.dateString || b.datetime).getTime() - 
       new Date(a.dateString || a.datetime).getTime()
     );
 
-    const lastReading = sortedReadings[0];
-    const lastReadingTime = new Date(lastReading.dateString || lastReading.datetime);
+    const lastReading = sorted[0];
+    const lastTime = new Date(lastReading.dateString || lastReading.datetime);
+    const avgInterval = this.getAverageInterval(readings);
     
-    // Calculate average interval
-    const averageInterval = this.calculateAverageInterval(readings);
-    
-    // Predict next reading time
-    const nextReadingTime = new Date(lastReadingTime.getTime() + averageInterval);
-    
-    // Calculate confidence based on consistency of recent intervals
+    const nextTime = new Date(lastTime.getTime() + avgInterval);
     const confidence = this.calculateConfidence(readings);
     
-    return { 
-      time: nextReadingTime, 
-      confidence 
-    };
+    return { time: nextTime, confidence };
   }
 
   /**
-   * Calculate confidence in our prediction based on interval consistency
+   * Calculate confidence based on reading consistency
    */
   private static calculateConfidence(readings: CGMReading[]): number {
-    if (readings.length < 3) {
-      return 0.5; // Low confidence with insufficient data
-    }
+    if (readings.length < 3) return 0.5;
 
-    const intervals: number[] = [];
-    const sortedReadings = [...readings].sort((a, b) => 
+    const sorted = [...readings].sort((a, b) => 
       new Date(b.dateString || b.datetime).getTime() - 
       new Date(a.dateString || a.datetime).getTime()
     );
 
-    // Calculate last 5 intervals
-    for (let i = 0; i < Math.min(5, sortedReadings.length - 1); i++) {
-      const current = new Date(sortedReadings[i].dateString || sortedReadings[i].datetime);
-      const previous = new Date(sortedReadings[i + 1].dateString || sortedReadings[i + 1].datetime);
+    const intervals: number[] = [];
+    for (let i = 0; i < Math.min(5, sorted.length - 1); i++) {
+      const current = new Date(sorted[i].dateString || sorted[i].datetime);
+      const previous = new Date(sorted[i + 1].dateString || sorted[i + 1].datetime);
       intervals.push(current.getTime() - previous.getTime());
     }
 
@@ -116,55 +102,46 @@ export class SmartPollingAnalyzer {
     // Calculate coefficient of variation (lower = more consistent = higher confidence)
     const mean = intervals.reduce((a, b) => a + b, 0) / intervals.length;
     const variance = intervals.reduce((sum, interval) => sum + Math.pow(interval - mean, 2), 0) / intervals.length;
-    const standardDeviation = Math.sqrt(variance);
-    const coefficientOfVariation = standardDeviation / mean;
+    const stdDev = Math.sqrt(variance);
+    const coefficientOfVariation = stdDev / mean;
 
-    // Convert to confidence (0-1), where lower variation = higher confidence
+    // Convert to confidence (0-1)
     return Math.max(0.2, Math.min(1, 1 - coefficientOfVariation));
   }
 
   /**
-   * Determine the optimal polling strategy based on current time and predictions
+   * Get optimal polling strategy based on predictions
    */
   static getPollingStrategy(readings: CGMReading[]): PollingStrategy {
     const prediction = this.predictNextReading(readings);
     const now = new Date();
 
     if (!prediction.time || prediction.confidence < 0.3) {
-      // Low confidence or no prediction - use normal polling
+      // Low confidence - use normal polling
       return {
-        nextInterval: this.NORMAL_POLLING_INTERVAL,
+        nextInterval: this.NORMAL_POLLING,
         mode: 'normal',
         nextExpectedReading: prediction.time,
         confidence: prediction.confidence
       };
     }
 
-    const timeUntilNextReading = prediction.time.getTime() - now.getTime();
+    const timeUntilNext = prediction.time.getTime() - now.getTime();
 
-    // If we're within the intensive window before expected reading
-    if (timeUntilNextReading > 0 && timeUntilNextReading <= this.INTENSIVE_WINDOW) {
+    // Use intensive polling if we're within 2 minutes of expected reading
+    // or if the reading is overdue by up to 2 minutes
+    if (Math.abs(timeUntilNext) <= this.INTENSIVE_WINDOW) {
       return {
-        nextInterval: this.INTENSIVE_POLLING_INTERVAL,
+        nextInterval: this.INTENSIVE_POLLING,
         mode: 'intensive',
         nextExpectedReading: prediction.time,
         confidence: prediction.confidence
       };
     }
 
-    // If the expected reading is overdue, use intensive polling to catch it
-    if (timeUntilNextReading < 0 && Math.abs(timeUntilNextReading) <= this.INTENSIVE_WINDOW) {
-      return {
-        nextInterval: this.INTENSIVE_POLLING_INTERVAL,
-        mode: 'intensive',
-        nextExpectedReading: prediction.time,
-        confidence: prediction.confidence
-      };
-    }
-
-    // Otherwise, use normal polling
+    // Otherwise use normal polling
     return {
-      nextInterval: this.NORMAL_POLLING_INTERVAL,
+      nextInterval: this.NORMAL_POLLING,
       mode: 'normal',
       nextExpectedReading: prediction.time,
       confidence: prediction.confidence
@@ -172,7 +149,7 @@ export class SmartPollingAnalyzer {
   }
 
   /**
-   * Format time until next expected reading for display
+   * Format time until next reading for display
    */
   static formatTimeUntilNext(nextExpectedReading: Date | null): string {
     if (!nextExpectedReading) return 'Unknown';

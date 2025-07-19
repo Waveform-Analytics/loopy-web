@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Integrate Material-UI with custom theme, update README and rebuild guide for completion of Step 4">
-      <change beforePath="$PROJECT_DIR$/notes/rebuild-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/notes/rebuild-guide.md" afterDir="false" />
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/charts/CGMChartContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/charts/CGMChartContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/charts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/charts/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +61,7 @@
       <workItem from="1752793424237" duration="576000" />
       <workItem from="1752794032661" duration="158000" />
       <workItem from="1752794257773" duration="504000" />
-      <workItem from="1752794829544" duration="31110000" />
+      <workItem from="1752794829544" duration="34055000" />
     </task>
     <task id="LOCAL-00001" summary="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies.">
       <option name="closed" value="true" />
@@ -149,7 +151,23 @@
       <option name="project" value="LOCAL" />
       <updated>1752938483338</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Complete CGM dashboard implementation, update README and rebuild guide to reflect production readiness.">
+      <option name="closed" value="true" />
+      <created>1752938922252</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1752938922252</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness.">
+      <option name="closed" value="true" />
+      <created>1752938931223</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1752938931223</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,6 +196,8 @@
     <MESSAGE value="Add CGM service, API client, and types for handling glucose data and chart configurations" />
     <MESSAGE value="Update README, rebuild guide, and CLAUDE.md with progress on Steps 1-3 completion and next steps" />
     <MESSAGE value="Integrate Material-UI with custom theme, update README and rebuild guide for completion of Step 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="Integrate Material-UI with custom theme, update README and rebuild guide for completion of Step 4" />
+    <MESSAGE value="Complete CGM dashboard implementation, update README and rebuild guide to reflect production readiness." />
+    <MESSAGE value="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness." />
   </component>
 </project>

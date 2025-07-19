@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Stack } from '@mui/material';
-import { CGMChart } from './CGMChart';
+import { SimpleCGMChart } from './SimpleCGMChart';
 import { TimeRangeSelector } from './TimeRangeSelector';
 import { useChartState, useCGMData, useChartPreferences } from '../../hooks';
 import { ChartConfig, CGMReading } from '../../types';
@@ -94,8 +94,23 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
     },
   });
 
-  // Use custom data or fetched data
-  const chartData = customData || fetchedData;
+  // Filter data based on selected time range
+  const chartData = React.useMemo(() => {
+    const sourceData = customData || fetchedData;
+    if (!sourceData.length) return sourceData;
+
+    // Calculate time range cutoff
+    const now = new Date();
+    const timeRangeHours = parseInt(selectedTimeRange.replace('h', ''));
+    const cutoffTime = new Date(now.getTime() - timeRangeHours * 60 * 60 * 1000);
+
+    // Filter data to selected time range
+    return sourceData.filter(reading => {
+      const readingTime = new Date(reading.dateString || reading.datetime);
+      return readingTime >= cutoffTime;
+    });
+  }, [customData, fetchedData, selectedTimeRange]);
+
   const isLoading = autoFetch && loadingState === 'loading';
   const errorMessage = error?.message;
 
@@ -145,17 +160,11 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
       )}
 
       {/* Chart */}
-      <CGMChart
+      <SimpleCGMChart
         data={chartData}
         height={height}
         width={width}
         timeRange={selectedTimeRange}
-        userHasInteracted={userHasInteracted}
-        onUserInteraction={handleUserInteraction}
-        config={{
-          ...preferences,
-          ...config,
-        }}
         isLoading={isLoading}
         error={errorMessage}
         showTargetRange={showTargetRange}

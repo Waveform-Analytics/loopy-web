@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="started over and rebuilding from scratch">
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Add CGM service, API client, and types for handling glucose data and chart configurations">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes/rebuild-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/notes/rebuild-guide.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +62,7 @@
       <workItem from="1752793424237" duration="576000" />
       <workItem from="1752794032661" duration="158000" />
       <workItem from="1752794257773" duration="504000" />
-      <workItem from="1752794829544" duration="25599000" />
+      <workItem from="1752794829544" duration="27464000" />
     </task>
     <task id="LOCAL-00001" summary="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies.">
       <option name="closed" value="true" />
@@ -128,11 +128,30 @@
       <option name="project" value="LOCAL" />
       <updated>1752920974363</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Add CGM service, API client, and types for handling glucose data and chart configurations">
+      <option name="closed" value="true" />
+      <created>1752933886385</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1752933886385</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies." />
@@ -143,6 +162,7 @@
     <MESSAGE value="Add clipping path, improve zoom/pan behavior, and enhance UX for `D3TimeSeriesChart`&#10;&#10;- Introduces a clipping path to prevent rendering outside chart bounds.&#10;- Refines zoom/pan behavior with better scale extents, cursor feedback, and disabled double-click zoom.&#10;- Improves touch and drag handling with updated styles." />
     <MESSAGE value="Enhance `D3TimeSeriesChart`: add user interaction state, refine Y-axis scaling, and improve zoom behavior&#10;&#10;- Introduces `userHasInteracted` state to adjust auto-scaling and UX feedback.&#10;- Refines Y-axis scaling logic with visible data and padding for better visualization.&#10;- Updates zoom/pan behavior with unrestricted panning, wider zoom scale range, and initial zoom transformations." />
     <MESSAGE value="started over and rebuilding from scratch" />
-    <option name="LAST_COMMIT_MESSAGE" value="started over and rebuilding from scratch" />
+    <MESSAGE value="Add CGM service, API client, and types for handling glucose data and chart configurations" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add CGM service, API client, and types for handling glucose data and chart configurations" />
   </component>
 </project>

@@ -26,8 +26,23 @@ A modern, interactive continuous glucose monitoring (CGM) dashboard built with R
 - Core dependencies installed  
 - Environment configuration ready
 
+**Step 2 Complete ✅**
+- TypeScript types defined (CGM, Chart, Pump, Common)
+- Type safety throughout application
+- Helper functions and constants
+- Barrel exports for clean imports
+
+**Step 3 Complete ✅**
+- API service layer implemented
+- Robust HTTP client with retry logic
+- CGM data fetching service
+- Error handling and validation
+- Connection testing utilities
+
+**Current Status:** Ready for Step 4 (Chart State Management Hooks)
+
 **Next Steps:**
-Follow `notes/rebuild-guide.md` for step-by-step implementation.
+Follow `notes/rebuild-guide.md` for continued step-by-step implementation.
 
 ## 🚀 Quick Start
 
@@ -42,19 +57,27 @@ npm start
 npm run build
 ```
 
-## 📁 Planned Architecture
+## 📁 Current Architecture
 
 ```
 src/
-├── components/
-│   ├── charts/           # D3.js chart components
-│   ├── dashboard/        # Dashboard layout
-│   └── common/          # Shared components
-├── hooks/               # Custom React hooks
-├── services/            # API layer  
-├── types/               # TypeScript definitions
-├── utils/               # Helper functions
-└── constants/           # App constants
+├── types/               # ✅ TypeScript definitions
+│   ├── cgm.ts           #     CGM data types
+│   ├── chart.ts         #     Chart configuration types  
+│   ├── pump.ts          #     Pump data types (future)
+│   ├── common.ts        #     Shared utility types
+│   └── index.ts         #     Barrel exports
+├── services/            # ✅ API service layer
+│   ├── apiClient.ts     #     Base HTTP client
+│   ├── cgmService.ts    #     CGM data service
+│   ├── testServices.ts  #     Testing utilities
+│   └── index.ts         #     Service exports
+├── components/          # 🚧 Next: Chart components
+│   ├── charts/          #     D3.js chart components
+│   ├── dashboard/       #     Dashboard layout
+│   └── common/          #     Shared components
+├── hooks/               # 🚧 Next: Custom React hooks
+└── utils/               # 🔄 Future: Helper functions
 ```
 
 ## 🔧 Environment

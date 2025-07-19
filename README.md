@@ -39,7 +39,14 @@ A modern, interactive continuous glucose monitoring (CGM) dashboard built with R
 - Error handling and validation
 - Connection testing utilities
 
-**Current Status:** Ready for Step 4 (Chart State Management Hooks)
+**Step 4 Complete ✅**
+- Chart state management hooks (useChartState, useChartPreferences)
+- CGM data fetching hooks (useCGMData, useRealtimeCGM)
+- D3 chart interaction hooks (useChartInteractions, useChartTooltip)
+- Combined hooks for seamless integration
+- Auto-refresh, error handling, and memory management
+
+**Current Status:** Ready for Step 5 (Time Range Selector Component)
 
 **Next Steps:**
 Follow `notes/rebuild-guide.md` for continued step-by-step implementation.
@@ -72,11 +79,15 @@ src/
 │   ├── cgmService.ts    #     CGM data service
 │   ├── testServices.ts  #     Testing utilities
 │   └── index.ts         #     Service exports
-├── components/          # 🚧 Next: Chart components
+├── hooks/               # ✅ Custom React hooks
+│   ├── useChartState.ts #     Chart state management
+│   ├── useCGMData.ts    #     CGM data fetching
+│   ├── useChartInteractions.ts # D3 interactions
+│   └── index.ts         #     Combined hooks
+├── components/          # 🚧 Next: UI components
 │   ├── charts/          #     D3.js chart components
 │   ├── dashboard/       #     Dashboard layout
 │   └── common/          #     Shared components
-├── hooks/               # 🚧 Next: Custom React hooks
 └── utils/               # 🔄 Future: Helper functions
 ```
 

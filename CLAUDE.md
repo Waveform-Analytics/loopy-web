@@ -2,7 +2,7 @@
 
 A modern CGM dashboard built with React, TypeScript, and D3.js, following a clean architecture pattern.
 
-## Project Status: Steps 1-3 Complete ✅
+## Project Status: Steps 1-4 Complete ✅
 
 **Step 1 Complete ✅**
 - ✅ React TypeScript project initialized  
@@ -23,18 +23,24 @@ A modern CGM dashboard built with React, TypeScript, and D3.js, following a clea
 - ✅ Connection testing utilities
 - ✅ Service integration and barrel exports
 
+**Step 4 Complete ✅**
+- ✅ Chart state management hooks (useChartState, useChartPreferences)
+- ✅ CGM data fetching hooks (useCGMData, useRealtimeCGM)  
+- ✅ D3 chart interaction hooks (useChartInteractions, useChartTooltip)
+- ✅ Combined hooks for seamless integration (useCGMChart)
+- ✅ Auto-refresh, error handling, and memory management
+
 ## Next Steps
 
-Ready for **Step 4: Chart State Management Hooks**
+Ready for **Step 5: Time Range Selector Component**
 
 Remaining steps in `notes/rebuild-guide.md`:
-4. **Step 4**: Build chart state management hooks ⬅️ **NEXT**
-5. **Step 5**: Create time range selector component
+5. **Step 5**: Create time range selector component ⬅️ **NEXT**
 6. **Step 6**: Implement main D3.js chart component
-7. **Step 7**: Add data fetching hooks
-8. **Step 8**: Build dashboard layout
-9. **Step 9**: Create current reading display
-10. **Step 10**: Polish and test
+7. **Step 7**: Build dashboard layout
+8. **Step 8**: Create current reading display
+9. **Step 9**: Polish and test
+10. **Step 10**: Deploy and optimize
 
 ## Installed Dependencies
 

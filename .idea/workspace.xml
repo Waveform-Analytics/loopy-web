@@ -4,34 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Enhance `D3TimeSeriesChart`: add user interaction state, refine Y-axis scaling, and improve zoom behavior&#10;&#10;- Introduces `userHasInteracted` state to adjust auto-scaling and UX feedback.&#10;- Refines Y-axis scaling logic with visible data and padding for better visualization.&#10;- Updates zoom/pan behavior with unrestricted panning, wider zoom scale range, and initial zoom transformations.">
-      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="started over and rebuilding from scratch">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/charts/D3TimeSeriesChart.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/charts/RechartsTimeSeriesChart.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/charts/TimeRangeSelector.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/charts/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useCGMData.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/api/base.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/api/cgm.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/api/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/cgm.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/common.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/pump.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/smartPolling.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp_backup/CLAUDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp_backup/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp_backup/notes/WEB_APP_IMPLEMENTATION_PLAN.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,22 +26,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.editor",
-    "ts.external.directory.path": "/Users/michelleweirathmueller/Documents/WORKSPACE/type-one/loopy-web/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/michelleweirathmueller/Documents/WORKSPACE/type-one/loopy-web/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -85,7 +62,7 @@
       <workItem from="1752793424237" duration="576000" />
       <workItem from="1752794032661" duration="158000" />
       <workItem from="1752794257773" duration="504000" />
-      <workItem from="1752794829544" duration="23514000" />
+      <workItem from="1752794829544" duration="25599000" />
     </task>
     <task id="LOCAL-00001" summary="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies.">
       <option name="closed" value="true" />
@@ -143,7 +120,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752890430642</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="started over and rebuilding from scratch">
+      <option name="closed" value="true" />
+      <created>1752920974363</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1752920974363</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +142,7 @@
     <MESSAGE value="Refactor `D3TimeSeriesChart`: simplify data handling, add initial zoom domain, and improve zoom behavior&#10;&#10;- Replaces filtered data logic with full dataset usage.&#10;- Introduces `initialDomain` for better time range handling.&#10;- Enhances zoom and pan functionality with dynamic scale extents.&#10;- Updates stats calculation to respect selected time range." />
     <MESSAGE value="Add clipping path, improve zoom/pan behavior, and enhance UX for `D3TimeSeriesChart`&#10;&#10;- Introduces a clipping path to prevent rendering outside chart bounds.&#10;- Refines zoom/pan behavior with better scale extents, cursor feedback, and disabled double-click zoom.&#10;- Improves touch and drag handling with updated styles." />
     <MESSAGE value="Enhance `D3TimeSeriesChart`: add user interaction state, refine Y-axis scaling, and improve zoom behavior&#10;&#10;- Introduces `userHasInteracted` state to adjust auto-scaling and UX feedback.&#10;- Refines Y-axis scaling logic with visible data and padding for better visualization.&#10;- Updates zoom/pan behavior with unrestricted panning, wider zoom scale range, and initial zoom transformations." />
-    <option name="LAST_COMMIT_MESSAGE" value="Enhance `D3TimeSeriesChart`: add user interaction state, refine Y-axis scaling, and improve zoom behavior&#10;&#10;- Introduces `userHasInteracted` state to adjust auto-scaling and UX feedback.&#10;- Refines Y-axis scaling logic with visible data and padding for better visualization.&#10;- Updates zoom/pan behavior with unrestricted panning, wider zoom scale range, and initial zoom transformations." />
+    <MESSAGE value="started over and rebuilding from scratch" />
+    <option name="LAST_COMMIT_MESSAGE" value="started over and rebuilding from scratch" />
   </component>
 </project>

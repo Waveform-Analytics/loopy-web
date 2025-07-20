@@ -71,7 +71,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // Real-time CGM data with alerts
   const cgmData = useRealtimeCGM({
     hours: 24,
-    refreshInterval: 0, // NUCLEAR: Disable auto-refresh
+    refreshInterval: 5 * 60 * 1000, // 5 minutes
     fetchOnMount: true,
     alertThresholds: {
       low: 70,

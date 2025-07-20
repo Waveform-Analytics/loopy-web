@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Stack } from '@mui/material';
-import { RechartsTimeSeriesChart } from './RechartsTimeSeriesChart';
+import { SimpleCGMChart } from './SimpleCGMChart';
 import { TimeRangeSelector } from './TimeRangeSelector';
 import { useChartState, useCGMData, useChartPreferences } from '../../hooks';
 import { ChartConfig, CGMReading } from '../../types';
@@ -69,7 +69,7 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
     setUserHasInteracted,
   } = useChartState({
     initialTimeRange: '3h',
-    initialLiveMode: false, // NUCLEAR: Disable live mode
+    initialLiveMode: true,
   });
 
   // Chart preferences
@@ -160,24 +160,18 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
             onLiveModeToggle={handleLiveModeToggle}
             onRefresh={autoFetch ? handleRefresh : undefined}
             isLoading={isLoading}
-            nextRefreshIn={0} // Don't pass the countdown to prevent re-renders
+            nextRefreshIn={nextRefreshIn}
             showRefreshControls={autoFetch}
           />
         </Box>
       )}
 
-      {/* Chart - Completely isolated from timer updates */}
-      <Box sx={{ isolation: 'isolate' }}>
-        <RechartsTimeSeriesChart
-          data={chartData}
-          height={height}
-          isLoading={isLoading}
-          error={errorMessage}
-          showTargetRange={showTargetRange}
-          targetRange={targetRange}
-          timeRange={selectedTimeRange}
-        />
-      </Box>
+      {/* Chart - Fresh start */}
+      <SimpleCGMChart
+        data={chartData}
+        height={height}
+        timeRange={selectedTimeRange}
+      />
     </Stack>
   );
 };

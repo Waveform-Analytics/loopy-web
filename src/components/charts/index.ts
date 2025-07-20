@@ -8,6 +8,9 @@ export type { TimeRangeSelectorProps, SimpleTimeRangeSelectorProps } from './Tim
 export { RechartsTimeSeriesChart } from './RechartsTimeSeriesChart';
 export type { RechartsTimeSeriesChartProps } from './RechartsTimeSeriesChart';
 
+export { SimpleCGMChart } from './SimpleCGMChart';
+export type { SimpleCGMChartProps } from './SimpleCGMChart';
+
 export { CGMChartContainer } from './CGMChartContainer';
 export type { CGMChartContainerProps } from './CGMChartContainer';
 

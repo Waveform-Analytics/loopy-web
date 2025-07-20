@@ -96,4 +96,6 @@ To test the API connection, you can:
    - Health: https://loopy-api-production.up.railway.app/api/health
    - Current: https://loopy-api-production.up.railway.app/api/cgm/current
 
-Ready to continue with Step 4!
+## Project Management Memories
+
+- Update @CLAUDE.md as needed if project plan or approach is changed or updated.

@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Optimize chart rendering performance with React.memo and useMemo; disable auto-refresh and live mode for improved stability.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/charts/CGMChartContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/charts/CGMChartContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/charts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/charts/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/Dashboard.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Introduce `SimpleCGMChart` using Recharts for glucose visualization; replace `RechartsTimeSeriesChart` in `CGMChartContainer` for improved simplicity and performance." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +58,7 @@
       <workItem from="1752794032661" duration="158000" />
       <workItem from="1752794257773" duration="504000" />
       <workItem from="1752794829544" duration="37156000" />
-      <workItem from="1752953105400" duration="5154000" />
+      <workItem from="1752953105400" duration="5641000" />
     </task>
     <task id="LOCAL-00001" summary="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies.">
       <option name="closed" value="true" />
@@ -194,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752977586044</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Introduce `SimpleCGMChart` using Recharts for glucose visualization; replace `RechartsTimeSeriesChart` in `CGMChartContainer` for improved simplicity and performance.">
+      <option name="closed" value="true" />
+      <created>1752978770673</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1752978770673</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +231,7 @@
     <MESSAGE value="Add `RechartsTimeSeriesChart`, integrate Recharts library for glucose visualization, and update `CGMChartContainer` for improved performance and additional functionality." />
     <MESSAGE value="Remove `CGMChart` and `SimpleCGMChart` components due to deprecation and transition to alternative charting approach." />
     <MESSAGE value="Optimize chart rendering performance with React.memo and useMemo; disable auto-refresh and live mode for improved stability." />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimize chart rendering performance with React.memo and useMemo; disable auto-refresh and live mode for improved stability." />
+    <MESSAGE value="Introduce `SimpleCGMChart` using Recharts for glucose visualization; replace `RechartsTimeSeriesChart` in `CGMChartContainer` for improved simplicity and performance." />
+    <option name="LAST_COMMIT_MESSAGE" value="Introduce `SimpleCGMChart` using Recharts for glucose visualization; replace `RechartsTimeSeriesChart` in `CGMChartContainer` for improved simplicity and performance." />
   </component>
 </project>

@@ -1,101 +1,189 @@
-# Loopy Web - Complete CGM Dashboard 🎉
+# Loopy Web - CGM Dashboard Project
 
-A modern, fully functional CGM dashboard built with React, TypeScript, and D3.js.
+A modern CGM (Continuous Glucose Monitor) dashboard built with React, TypeScript, and Recharts.
 
-## 🎯 PROJECT STATUS: COMPLETE ✅
+## 🎯 PROJECT STATUS: FRESH START 🆕
 
-**All Implementation Steps Finished:**
+**Starting Clean After Chart Library Investigation**
 
-**Step 1-4: Foundation ✅**
-- ✅ React TypeScript project with all dependencies
-- ✅ Complete type system (CGM, Chart, Pump, Common types)
-- ✅ Robust API service layer with retry logic and error handling
-- ✅ Advanced React hooks for state management and D3 interactions
+We've identified that **axis flickering in Recharts is a known issue** with time-series data that updates frequently. This is a fresh start with lessons learned.
 
-**Step 5: Time Range Selector ✅**
-- ✅ Interactive time range buttons (1h, 3h, 6h, 12h, 24h)
+## 🚀 IMPLEMENTATION PLAN
+
+### Phase 1: Foundation Setup ⚡
+**Goal**: Rock-solid React + TypeScript + Material-UI foundation
+- ✅ Clean React 18+ TypeScript project
+- ✅ Material-UI 6+ for components and theming  
+- ✅ Complete type system (CGM, Chart, Common types)
+- ✅ Robust API service layer with retry logic
+- ✅ Environment configuration (.env setup)
+
+### Phase 2: Data Layer 📊
+**Goal**: Reliable data fetching and state management
+- ✅ Custom React hooks for CGM data fetching
+- ✅ Real-time data updates with proper intervals
+- ✅ Error handling and loading states
+- ✅ Data transformation utilities
+- ✅ Mock data for development
+
+### Phase 3: UI Components 🎨
+**Goal**: Clean, responsive Material-UI components
+- ✅ Time range selector (1h, 3h, 6h, 12h, 24h)
+- ✅ Current glucose reading display
 - ✅ Live mode toggle with countdown timer
-- ✅ Manual refresh controls with loading states
 - ✅ Mobile-responsive design
+- ✅ Alert/notification system
 
-**Step 6: D3.js Chart Component ✅**
-- ✅ Smooth pan/zoom interactions with D3.js transforms
-- ✅ Auto-scaling Y-axis based on visible data vs user interaction
-- ✅ Interactive tooltips with data point information
-- ✅ Target range visualization with customizable thresholds
-- ✅ Loading/error states with Material-UI components
+### Phase 4: Chart Implementation 📈
+**Goal**: Stable, flicker-free glucose visualization
 
-**Step 7: Dashboard Layout ✅**
-- ✅ Complete responsive dashboard with current reading + chart
-- ✅ Real-time glucose monitoring with alert notifications
-- ✅ Mobile-optimized design (current reading in header)
-- ✅ Snackbar notifications for glucose alerts
-- ✅ Material-UI theming and styling integration
+**CRITICAL LESSONS LEARNED:**
+- ⚠️ **Recharts axis flickering**: Known issue with time-series + live updates
+- ✅ **Solution approaches**: Memoization, static sizing, disabled animations
+- ✅ **Alternative libraries**: Chart.js, Victory, D3.js direct
+- ✅ **Key principle**: Minimize re-renders of chart components
 
-## 🚀 LIVE APPLICATION
+**Implementation Strategy:**
+1. Start with **simplest possible chart** (static data, no animations)
+2. Add **aggressive memoization** from day 1
+3. Test with **static data first**, then live data
+4. If Recharts fails: **Chart.js fallback ready**
 
-**Currently Running:** http://localhost:3000
+### Phase 5: Dashboard Integration 🏠
+**Goal**: Complete dashboard with all features
+- ✅ Responsive layout (mobile + desktop)
+- ✅ Real-time glucose monitoring
+- ✅ Alert notifications (snackbar)
+- ✅ Chart + current reading integration
+- ✅ Loading and error states
 
-**Features Working:**
-- Interactive D3.js chart with smooth pan/zoom
-- Current glucose reading with trend arrows and status indicators
-- Time range selector with live mode
-- Real-time data updates every 5 minutes
-- Glucose alert notifications
-- Professional Material-UI styling
-- Full mobile responsiveness
+## 🛠 TECHNOLOGY STACK
 
-## Installed Dependencies
-
-- **React 19** + TypeScript
-- **Material-UI 7** for components and theming
-- **D3.js 7** for interactive charts
-- **Axios** for API communication  
+### Core Framework
+- **React 18+** with TypeScript
+- **Material-UI 6+** for UI components
 - **date-fns** for time utilities
+- **Axios** for API communication
 
-## Architecture Principles
+### Charting (Primary)
+- **Recharts 2+** - React-native charting
+- **Fallback**: Chart.js + react-chartjs-2 (if Recharts fails)
 
-- **Separation of concerns**: Data, state, and UI layers clearly separated
-- **TypeScript first**: Strong typing throughout
-- **D3.js best practices**: Full data scales + transform-based interactions
-- **Extensible design**: Ready for pump data integration
-- **Mobile responsive**: Touch-friendly interactions
+### Development Tools
+- **TypeScript 5+** for type safety
+- **ESLint + Prettier** for code quality
+- **React Dev Tools** for debugging
 
-## Environment
+## 🔧 ENVIRONMENT SETUP
 
-API configured for:
-- Backend: https://loopy-api-production.up.railway.app
-- Authentication: Bearer token configured in .env
-
-## Development Commands
-
+### Required Files
+Create `.env` file with:
 ```bash
-npm start    # Start development server
-npm build    # Build for production  
-npm test     # Run tests
+REACT_APP_API_BASE_URL=https://loopy-api-production.up.railway.app
+REACT_APP_API_TOKEN=your_bearer_token_here
 ```
 
-## Testing Services
+### API Endpoints
+- **Base URL**: https://loopy-api-production.up.railway.app
+- **Health Check**: `/api/health`
+- **Current Reading**: `/api/cgm/current`
+- **Historical Data**: `/api/cgm/readings?hours=24`
 
-To test the API connection, you can:
+## 🎨 DESIGN PRINCIPLES
 
-1. **In browser console** (when dev server is running):
-   ```javascript
-   // Available after importing ServiceTest component
-   testServices.quickTest()
-   testServices.runAllTests()
-   ```
+### Data Flow
+```
+API → Custom Hooks → Components → UI
+```
 
-2. **Use the ServiceTest component**:
-   ```typescript
-   // Temporarily add to App.tsx:
-   import { ServiceTest } from './ServiceTest';
-   ```
+### Component Architecture
+```
+Dashboard
+├── CurrentReading (glucose value + trend)
+├── TimeRangeSelector (1h-24h + live mode)
+└── CGMChart (memoized, flicker-resistant)
+```
 
-3. **Test endpoints directly**:
-   - Health: https://loopy-api-production.up.railway.app/api/health
-   - Current: https://loopy-api-production.up.railway.app/api/cgm/current
+### Chart Requirements
+1. **Must be flicker-free** (top priority)
+2. Time-series glucose data visualization
+3. Target range overlay (70-180 mg/dL)
+4. Responsive design
+5. Real-time updates without re-animation
 
-## Project Management Memories
+## 🚨 CRITICAL LESSONS & GOTCHAS
 
-- Update @CLAUDE.md as needed if project plan or approach is changed or updated.
+### Chart Flickering Prevention
+- **Memoize ALL functions** passed to chart components
+- **Memoize data transformations** with useMemo
+- **Disable animations** for live-updating charts
+- **Use stable keys** for chart components
+- **Test with live timers** early in development
+
+### Performance Best Practices
+- **React.memo** for expensive components
+- **useCallback** for event handlers passed to charts
+- **Separate timer logic** from chart rendering
+- **Batch state updates** when possible
+
+### Mobile Considerations
+- **Touch-friendly** controls (44px minimum)
+- **Responsive breakpoints** for different screen sizes
+- **Simplified layouts** on small screens
+- **Readable font sizes** (minimum 14px)
+
+## 🧪 TESTING STRATEGY
+
+### Development Testing
+1. **Start with mock data** (no API calls)
+2. **Add static API data** (single fetch)
+3. **Enable live updates** (timer-based)
+4. **Test chart stability** under load
+5. **Mobile responsiveness** testing
+
+### Chart-Specific Testing
+- [ ] Static data renders without flicker
+- [ ] Live data updates smoothly
+- [ ] Time range changes work correctly
+- [ ] Target range displays properly
+- [ ] Mobile layout is usable
+
+## 📦 DEVELOPMENT COMMANDS
+
+```bash
+npm start    # Development server (http://localhost:3000)
+npm build    # Production build
+npm test     # Run tests
+npm run lint # Code quality check
+```
+
+## 🎯 SUCCESS CRITERIA
+
+### Minimum Viable Product (MVP)
+- [ ] Displays current glucose reading
+- [ ] Shows glucose history chart (flicker-free!)
+- [ ] Time range selection works
+- [ ] Mobile responsive
+- [ ] Connects to live API
+
+### Enhanced Features
+- [ ] Real-time updates every 5 minutes
+- [ ] Glucose alerts/notifications
+- [ ] Target range visualization
+- [ ] Trend arrows and analysis
+- [ ] Professional styling
+
+## 🔄 NEXT STEPS
+
+**For Fresh Start:**
+1. **Clean project setup** - React + TypeScript + Material-UI
+2. **API integration** - Test with live glucose data
+3. **Basic UI components** - Current reading + time selector
+4. **Chart implementation** - Start simple, add features gradually
+5. **Anti-flicker testing** - Verify stability under live updates
+
+**Remember**: Chart stability is the #1 priority. If Recharts flickers, switch to Chart.js immediately.
+
+---
+
+Ready for a clean, flicker-free CGM dashboard! 🚀

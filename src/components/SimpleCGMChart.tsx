@@ -9,12 +9,17 @@ import {
   ReferenceArea,
   Tooltip,
 } from 'recharts';
-import { Paper, Box, Typography, useTheme } from '@mui/material';
+import { Paper, Box, Typography, useTheme, Button, Chip } from '@mui/material';
 import { ChartDataPoint } from '../types';
 
 interface SimpleCGMChartProps {
   data: ChartDataPoint[];
   timeRange: string;
+  onTimeRangeChange: (range: string) => void;
+  timeUntilNext?: number;
+  lastUpdate?: Date | null;
+  nextExpectedReading?: Date | null;
+  estimatedInterval?: number;
   height?: number;
 }
 
@@ -38,9 +43,45 @@ const CustomTooltip = React.memo(({ active, payload, label }: any) => {
 
 CustomTooltip.displayName = 'CustomTooltip';
 
+const timeRangeOptions = ['1h', '3h', '6h', '12h', '24h'];
+
+const formatCountdown = (milliseconds: number): string => {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
+
+const formatTimeSince = (date: Date): string => {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  
+  if (diffMinutes < 1) {
+    return 'Just now';
+  } else if (diffMinutes === 1) {
+    return '1 min ago';
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes} min ago`;
+  } else {
+    const diffHours = Math.floor(diffMinutes / 60);
+    const remainingMinutes = diffMinutes % 60;
+    if (diffHours === 1) {
+      return remainingMinutes > 0 ? `1h ${remainingMinutes}m ago` : '1h ago';
+    } else {
+      return remainingMinutes > 0 ? `${diffHours}h ${remainingMinutes}m ago` : `${diffHours}h ago`;
+    }
+  }
+};
+
 export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
   data,
   timeRange,
+  onTimeRangeChange,
+  timeUntilNext = 0,
+  lastUpdate,
+  nextExpectedReading,
+  estimatedInterval,
   height = 400,
 }) => {
   const theme = useTheme();
@@ -101,6 +142,12 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
     []
   );
 
+  // Memoize countdown display to prevent unnecessary re-renders
+  const countdownDisplay = useMemo(() => 
+    formatCountdown(timeUntilNext), 
+    [timeUntilNext]
+  );
+
   if (data.length === 0) {
     return (
       <Paper elevation={2} sx={{ p: 3, height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -113,16 +160,81 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
 
   return (
     <Paper elevation={2} sx={{ p: 2 }}>
+      {/* Integrated Header with Time Range Pills */}
       <Box sx={{ mb: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Glucose Levels - {timeRange}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Target range: {chartConfig.targetRange.min}-{chartConfig.targetRange.max} mg/dL 
-          <span style={{ color: chartConfig.colors.targetRange, fontWeight: 'bold' }}>
-            {' '}(green area)
-          </span>
-        </Typography>
+        {/* Top row: Title and pill buttons */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          mb: 2,
+          flexWrap: 'wrap',
+          gap: 1
+        }}>
+          <Typography variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+            Glucose Levels
+          </Typography>
+          
+          {/* Pill-shaped time range buttons */}
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            {timeRangeOptions.map((option) => (
+              <Button
+                key={option}
+                variant={timeRange === option ? 'contained' : 'outlined'}
+                size="small"
+                onClick={() => onTimeRangeChange(option)}
+                sx={{
+                  minWidth: 'auto',
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 3, // Pill shape
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  height: 32,
+                }}
+              >
+                {option}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Compact stats row */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          gap: 1,
+          flexWrap: 'wrap',
+          fontSize: '0.8rem'
+        }}>
+          <Chip 
+            label={`Next: ${countdownDisplay}`}
+            size="small" 
+            color="primary" 
+            variant="outlined"
+            sx={{ fontSize: '0.7rem', height: 24 }}
+          />
+          
+          {lastUpdate && (
+            <Typography variant="caption" color="text.secondary">
+              {formatTimeSince(lastUpdate)}
+            </Typography>
+          )}
+          
+          {estimatedInterval && (
+            <Typography variant="caption" color="text.secondary">
+              ~{Math.round(estimatedInterval / 60000)}min
+            </Typography>
+          )}
+          
+          <Typography variant="caption" color="text.secondary">
+            Target: {chartConfig.targetRange.min}-{chartConfig.targetRange.max} mg/dL
+            <span style={{ color: chartConfig.colors.targetRange, fontWeight: 'bold' }}>
+              {' '}(green)
+            </span>
+          </Typography>
+        </Box>
       </Box>
       
       <Box sx={{ height }}>

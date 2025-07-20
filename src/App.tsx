@@ -5,7 +5,7 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import { CurrentReading, TimeRangeSelector, SimpleCGMChart } from './components';
+import { CurrentReading, SimpleCGMChart } from './components';
 import { useCGMData, useSmartPolling } from './hooks';
 import { transformCGMDataForChart, generateMockCGMData } from './utils';
 
@@ -19,7 +19,7 @@ function App() {
     refreshHistorical,
     setTimeRange,
     timeRange,
-  } = useCGMData('24h');
+  } = useCGMData('3h');
 
   // Live mode with intelligent polling based on actual CGM data patterns
   const handleLiveUpdate = useCallback(() => {
@@ -56,9 +56,9 @@ function App() {
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 } }}>
-      <Grid container spacing={3}>
-        {/* Current Reading */}
-        <Grid item xs={12} md={4}>
+      <Grid container spacing={2}>
+        {/* Compact Current Reading */}
+        <Grid item xs={12}>
           <CurrentReading
             reading={currentReading}
             loading={loading.current}
@@ -66,23 +66,16 @@ function App() {
           />
         </Grid>
 
-        {/* Time Range Selector */}
-        <Grid item xs={12} md={8}>
-          <TimeRangeSelector
+        {/* Integrated Chart with Controls */}
+        <Grid item xs={12}>
+          <SimpleCGMChart
+            data={chartData}
             timeRange={timeRange}
             onTimeRangeChange={handleTimeRangeChange}
             timeUntilNext={timeUntilNext}
             lastUpdate={lastUpdate}
             nextExpectedReading={nextExpectedReading}
             estimatedInterval={estimatedInterval}
-          />
-        </Grid>
-
-        {/* Chart */}
-        <Grid item xs={12}>
-          <SimpleCGMChart
-            data={chartData}
-            timeRange={timeRange}
             height={400}
           />
         </Grid>

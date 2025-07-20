@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
   Typography,
@@ -33,15 +33,48 @@ const TrendIcon = ({ trend }: { trend?: string }) => {
   }
 };
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'low':
-      return 'error';
-    case 'high':
-      return 'warning';
-    case 'normal':
-    default:
-      return 'success';
+// Configurable glucose thresholds (easily editable)
+const GLUCOSE_THRESHOLDS = {
+  urgentLow: 55,    // < 55: red (urgent low)
+  low: 70,          // 55-69: yellow (low) 
+  normal: 180,      // 70-180: green (in range)
+  high: 250,        // 181-250: yellow (high)
+  // > 250: red (really high)
+};
+
+const getGlucoseColor = (value: number): string => {
+  if (value < GLUCOSE_THRESHOLDS.urgentLow) {
+    return '#d32f2f'; // Red - urgent low
+  } else if (value < GLUCOSE_THRESHOLDS.low) {
+    return '#ed6c02'; // Orange/Yellow - low
+  } else if (value <= GLUCOSE_THRESHOLDS.normal) {
+    return '#2e7d32'; // Green - in range
+  } else if (value <= GLUCOSE_THRESHOLDS.high) {
+    return '#ed6c02'; // Orange/Yellow - high
+  } else {
+    return '#d32f2f'; // Red - really high
+  }
+};
+
+const formatTimeSince = (date: Date): string => {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  
+  if (diffMinutes < 1) {
+    return 'Just now';
+  } else if (diffMinutes === 1) {
+    return '1 min ago';
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes} min ago`;
+  } else {
+    const diffHours = Math.floor(diffMinutes / 60);
+    const remainingMinutes = diffMinutes % 60;
+    if (diffHours === 1) {
+      return remainingMinutes > 0 ? `1h ${remainingMinutes}m ago` : '1h ago';
+    } else {
+      return remainingMinutes > 0 ? `${diffHours}h ${remainingMinutes}m ago` : `${diffHours}h ago`;
+    }
   }
 };
 
@@ -50,14 +83,25 @@ export const CurrentReading: React.FC<CurrentReadingProps> = React.memo(({
   loading,
   error
 }) => {
-  // Common styling for consistent height
+  // State for live time updates (for time since calculation)
+  const [currentTime, setCurrentTime] = useState(new Date());
+  
+  // Update time every second to keep "time since" current
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+
+  // Common styling for compact, consistent height
   const commonPaperSx = {
-    p: 3,
-    minHeight: 240, // Fixed minimum height
+    p: 2,
+    minHeight: 120, // Compact height for mobile
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Align content to left
   };
 
   if (loading) {
@@ -93,62 +137,67 @@ export const CurrentReading: React.FC<CurrentReadingProps> = React.memo(({
     );
   }
 
-  const status = getGlucoseStatus(reading.value);
   const formattedValue = formatGlucoseValue(reading.value);
-  const lastUpdated = new Date(reading.lastUpdated).toLocaleTimeString();
+  const lastUpdatedDate = new Date(reading.lastUpdated);
+  const timeSinceUpdate = formatTimeSince(lastUpdatedDate);
+  const glucoseColor = getGlucoseColor(reading.value);
 
   return (
-    <Paper 
-      elevation={2} 
-      sx={{ 
-        ...commonPaperSx,
-        background: theme => theme.palette.mode === 'light' 
-          ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-      }}
-    >
-      <Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+    <Paper elevation={2} sx={commonPaperSx}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+        
+        {/* Left side: glucose + trend with time since below */}
+        <Box>
+          {/* Glucose value and trend */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            {/* Color-coded glucose value */}
+            <Typography 
+              variant="h1" 
+              component="div" 
+              sx={{ 
+                fontWeight: 'bold',
+                fontSize: { xs: '3rem', sm: '3.5rem' },
+                lineHeight: 1,
+                color: glucoseColor, // Color-coded based on value
+              }}
+            >
+              {formattedValue}
+            </Typography>
+            
+            {/* Trend arrow right next to glucose */}
+            <TrendIcon trend={reading.trend} />
+          </Box>
+          
+          {/* Time since update directly below glucose value */}
           <Typography 
-            variant="h3" 
-            component="div" 
+            variant="body2" 
+            color="text.secondary" 
             sx={{ 
-              fontWeight: 'bold',
-              mr: 1,
-              color: theme => theme.palette.text.primary
+              fontSize: '0.875rem',
+              mt: 1,
+              textAlign: 'left'
             }}
           >
-            {formattedValue}
+            {timeSinceUpdate}
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <TrendIcon trend={reading.trend} />
-            <Typography variant="caption" sx={{ mt: 0.5 }}>
-              mg/dL
-            </Typography>
-          </Box>
         </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Chip
-            label={status.toUpperCase()}
-            color={getStatusColor(status) as any}
-            size="small"
-            sx={{ fontWeight: 'bold' }}
-          />
-        </Box>
-
-        <Typography variant="body2" color="text.secondary">
-          Last updated: {lastUpdated}
-        </Typography>
         
-        <Box sx={{ mt: 1 }}>
-          <Chip
-            label={reading.status === 'active' ? 'ACTIVE' : 'INACTIVE'}
-            color={reading.status === 'active' ? 'success' : 'default'}
-            size="small"
-            variant="outlined"
-          />
-        </Box>
+        {/* Right side: current time */}
+        <Typography 
+          variant="h5" 
+          color="text.secondary" 
+          sx={{ 
+            fontSize: { xs: '1.25rem', sm: '1.5rem' },
+            fontWeight: 'medium',
+            textAlign: 'right'
+          }}
+        >
+          {currentTime.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+          })}
+        </Typography>
       </Box>
     </Paper>
   );

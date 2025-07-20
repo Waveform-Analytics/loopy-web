@@ -127,6 +127,7 @@ export function useSmartPolling(options: UseSmartPollingOptions = {}): UseSmartP
     countdownRef.current = setInterval(() => {
       setTimeUntilNext(prev => {
         const newValue = Math.max(0, prev - 1000);
+        // console.log('Countdown tick:', Math.floor(newValue / 1000), 'seconds remaining');
         if (newValue === 0) {
           clearInterval(countdownRef.current!);
           countdownRef.current = null;

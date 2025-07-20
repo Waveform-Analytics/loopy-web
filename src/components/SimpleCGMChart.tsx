@@ -43,6 +43,48 @@ const CustomTooltip = React.memo(({ active, payload, label }: any) => {
 
 CustomTooltip.displayName = 'CustomTooltip';
 
+// Custom dot component that colors based on glucose value
+const ColoredDot = React.memo((props: any) => {
+  const { cx, cy, payload } = props;
+  if (!payload || typeof payload.value !== 'number') return null;
+  
+  const getGlucoseColor = (value: number): string => {
+    const thresholds = {
+      urgentLow: 55,
+      low: 70,
+      normal: 180,
+      high: 250,
+    };
+    
+    if (value < thresholds.urgentLow) {
+      return '#d32f2f'; // Red - urgent low
+    } else if (value < thresholds.low) {
+      return '#ed6c02'; // Orange/Yellow - low
+    } else if (value <= thresholds.normal) {
+      return '#2e7d32'; // Green - in range
+    } else if (value <= thresholds.high) {
+      return '#ed6c02'; // Orange/Yellow - high
+    } else {
+      return '#d32f2f'; // Red - really high
+    }
+  };
+  
+  const color = getGlucoseColor(payload.value);
+  
+  return (
+    <circle
+      cx={cx}
+      cy={cy}
+      r={3}
+      fill={color}
+      stroke={color}
+      strokeWidth={1}
+    />
+  );
+});
+
+ColoredDot.displayName = 'ColoredDot';
+
 const timeRangeOptions = ['1h', '3h', '6h', '12h', '24h'];
 
 const formatCountdown = (milliseconds: number): string => {
@@ -86,10 +128,11 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
 }) => {
   const theme = useTheme();
 
+
   // Memoize chart configuration to prevent re-renders
   const chartConfig = useMemo(() => ({
     colors: {
-      glucose: theme.palette.primary.main,
+      glucose: '#bdbdbd', // Light gray for line
       targetRange: theme.palette.success.light, // Green for target range
       targetRangeFill: theme.palette.success.main, // Darker green for fill
       grid: theme.palette.grey[300],
@@ -295,12 +338,7 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
               dataKey="value"
               stroke={chartConfig.colors.glucose}
               strokeWidth={2}
-              dot={{ 
-                r: 3, 
-                fill: chartConfig.colors.dots, 
-                stroke: chartConfig.colors.glucose, 
-                strokeWidth: 1 
-              }}
+              dot={<ColoredDot />}
               activeDot={{ 
                 r: 5, 
                 fill: chartConfig.colors.dots, 

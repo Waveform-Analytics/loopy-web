@@ -3,7 +3,6 @@ import {
   Paper,
   Typography,
   Box,
-  Chip,
   CircularProgress,
   Alert,
 } from '@mui/material';
@@ -13,7 +12,7 @@ import {
   TrendingFlat,
 } from '@mui/icons-material';
 import { NormalizedCurrentReading } from '../types';
-import { formatGlucoseValue, getGlucoseStatus } from '../utils';
+import { formatGlucoseValue } from '../utils';
 
 interface CurrentReadingProps {
   reading: NormalizedCurrentReading | null;
@@ -144,7 +143,7 @@ export const CurrentReading: React.FC<CurrentReadingProps> = React.memo(({
 
   return (
     <Paper elevation={2} sx={commonPaperSx}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
         
         {/* Left side: glucose + trend with time since below */}
         <Box>
@@ -168,21 +167,21 @@ export const CurrentReading: React.FC<CurrentReadingProps> = React.memo(({
             <TrendIcon trend={reading.trend} />
           </Box>
           
-          {/* Time since update directly below glucose value */}
+          {/* Time since update directly below glucose value - centered */}
           <Typography 
             variant="body2" 
             color="text.secondary" 
             sx={{ 
               fontSize: '0.875rem',
               mt: 1,
-              textAlign: 'left'
+              textAlign: 'center'
             }}
           >
             {timeSinceUpdate}
           </Typography>
         </Box>
         
-        {/* Right side: current time */}
+        {/* Right side: current time - vertically centered */}
         <Typography 
           variant="h5" 
           color="text.secondary" 

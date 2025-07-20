@@ -319,11 +319,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={snackbarSeverity === 'error' ? 10000 : 6000}
-        onClose={() => setSnackbarOpen(false)}
+        onClose={(event, reason) => {
+          if (reason === 'clickaway') {
+            return;
+          }
+          setSnackbarOpen(false);
+        }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-          onClose={() => setSnackbarOpen(false)}
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setSnackbarOpen(false);
+              }}
+            >
+              <Typography sx={{ fontSize: '1.2rem', lineHeight: 1 }}>×</Typography>
+            </IconButton>
+          }
           severity={snackbarSeverity}
           variant="filled"
           sx={{ width: '100%' }}

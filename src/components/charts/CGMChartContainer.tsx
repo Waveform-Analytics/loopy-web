@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { Box, Stack } from '@mui/material';
-import { SimpleCGMChart } from './SimpleCGMChart';
+import { RechartsTimeSeriesChart } from './RechartsTimeSeriesChart';
 import { TimeRangeSelector } from './TimeRangeSelector';
 import { useChartState, useCGMData, useChartPreferences } from '../../hooks';
 import { ChartConfig, CGMReading } from '../../types';
@@ -68,7 +68,7 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
     setLiveMode,
     setUserHasInteracted,
   } = useChartState({
-    initialTimeRange: '24h',
+    initialTimeRange: '3h',
     initialLiveMode: true,
   });
 
@@ -99,15 +99,22 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
     const sourceData = customData || fetchedData;
     if (!sourceData.length) return sourceData;
 
-    // Calculate time range cutoff
-    const now = new Date();
+    // Sort data by time to get the most recent
+    const sortedData = [...sourceData].sort((a, b) => {
+      const timeA = new Date(a.dateString || a.datetime).getTime();
+      const timeB = new Date(b.dateString || b.datetime).getTime();
+      return timeB - timeA;
+    });
+
+    // Use the most recent data point as reference (not current time)
+    const mostRecentTime = new Date(sortedData[0].dateString || sortedData[0].datetime);
     const timeRangeHours = parseInt(selectedTimeRange.replace('h', ''));
-    const cutoffTime = new Date(now.getTime() - timeRangeHours * 60 * 60 * 1000);
+    const cutoffTime = new Date(mostRecentTime.getTime() - timeRangeHours * 60 * 60 * 1000);
 
     // Filter data to selected time range
     return sourceData.filter(reading => {
       const readingTime = new Date(reading.dateString || reading.datetime);
-      return readingTime >= cutoffTime;
+      return readingTime >= cutoffTime && readingTime <= mostRecentTime;
     });
   }, [customData, fetchedData, selectedTimeRange]);
 
@@ -160,16 +167,14 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
       )}
 
       {/* Chart */}
-      <SimpleCGMChart
+      <RechartsTimeSeriesChart
         data={chartData}
         height={height}
-        width={width}
-        timeRange={selectedTimeRange}
         isLoading={isLoading}
         error={errorMessage}
         showTargetRange={showTargetRange}
         targetRange={targetRange}
-        onDataPointHover={onDataPointHover}
+        timeRange={selectedTimeRange}
       />
     </Stack>
   );

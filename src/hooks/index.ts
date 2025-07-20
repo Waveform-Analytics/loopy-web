@@ -8,7 +8,6 @@
 import { useMemo } from 'react';
 import { useChartState } from './useChartState';
 import { useCGMData } from './useCGMData';
-import { useChartInteractions } from './useChartInteractions';
 
 // Chart state management hooks
 export { useChartState, useChartPreferences } from './useChartState';
@@ -26,15 +25,6 @@ export type {
   UseCGMDataReturn,
   UseRealtimeCGMOptions 
 } from './useCGMData';
-
-// D3 chart interaction hooks
-export { useChartInteractions, useChartTooltip } from './useChartInteractions';
-export type { 
-  UseChartInteractionsOptions, 
-  UseChartInteractionsReturn,
-  UseChartTooltipOptions,
-  UseChartTooltipReturn 
-} from './useChartInteractions';
 
 /**
  * Commonly used hook combinations
@@ -86,14 +76,6 @@ export const useCGMChart = (options: UseCGMChartOptions = {}) => {
     },
   });
 
-  // Chart interactions
-  const chartInteractions = useChartInteractions({
-    config: { height },
-    onInteractionStart: () => {
-      chartState.setUserInteracted();
-    },
-  });
-
   // Combined loading state
   const isLoading = useMemo(() => {
     return chartState.chartState.isLoading || cgmData.loadingState === 'loading';
@@ -114,9 +96,6 @@ export const useCGMChart = (options: UseCGMChartOptions = {}) => {
     dataQuality: cgmData.dataQuality,
     lastFetch: cgmData.lastFetch,
     refreshData: cgmData.refresh,
-    
-    // Chart interactions
-    ...chartInteractions,
     
     // Combined state
     isLoading,

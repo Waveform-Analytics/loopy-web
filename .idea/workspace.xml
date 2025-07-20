@@ -4,10 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness.">
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Add `RechartsTimeSeriesChart`, integrate Recharts library for glucose visualization, and update `CGMChartContainer` for improved performance and additional functionality.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/charts/CGMChart.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/charts/CGMChartContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/charts/CGMChartContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/charts/SimpleCGMChart.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/charts/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/charts/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useChartInteractions.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/chart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/chart.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +69,8 @@
       <workItem from="1752793424237" duration="576000" />
       <workItem from="1752794032661" duration="158000" />
       <workItem from="1752794257773" duration="504000" />
-      <workItem from="1752794829544" duration="34055000" />
+      <workItem from="1752794829544" duration="37156000" />
+      <workItem from="1752953105400" duration="1035000" />
     </task>
     <task id="LOCAL-00001" summary="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies.">
       <option name="closed" value="true" />
@@ -167,7 +176,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752938931223</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Introduce `SimpleCGMChart` component using D3.js for streamlined glucose visualization and replace `CGMChart` in `CGMChartContainer` for enhanced performance and stability.">
+      <option name="closed" value="true" />
+      <created>1752946312052</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1752946312052</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,6 +215,8 @@
     <MESSAGE value="Integrate Material-UI with custom theme, update README and rebuild guide for completion of Step 4" />
     <MESSAGE value="Complete CGM dashboard implementation, update README and rebuild guide to reflect production readiness." />
     <MESSAGE value="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add CGMChart and CGMChartContainer components with D3.js integration for glucose data visualization, along with ChartStyles for theme-aware chart styling and responsiveness." />
+    <MESSAGE value="Introduce `SimpleCGMChart` component using D3.js for streamlined glucose visualization and replace `CGMChart` in `CGMChartContainer` for enhanced performance and stability." />
+    <MESSAGE value="Add `RechartsTimeSeriesChart`, integrate Recharts library for glucose visualization, and update `CGMChartContainer` for improved performance and additional functionality." />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

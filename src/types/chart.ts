@@ -1,8 +1,7 @@
 /**
- * Chart-specific types for D3.js visualization components
+ * Chart-specific types for visualization components
  */
 
-import * as d3 from 'd3';
 import { CGMReading } from './cgm';
 
 /**
@@ -14,7 +13,7 @@ export type TimeRange = '1h' | '3h' | '6h' | '12h' | '24h';
  * Chart data point that combines timestamp with glucose data
  */
 export interface ChartDataPoint {
-  /** JavaScript Date object for D3 time scales */
+  /** JavaScript Date object for time scales */
   timestamp: Date;
   /** Glucose value in mg/dL */
   glucose: number;
@@ -32,8 +31,8 @@ export interface ChartState {
   isLiveMode: boolean;
   /** Whether user has manually panned/zoomed (disables auto-scaling) */
   userHasInteracted: boolean;
-  /** Current D3 zoom transform (for maintaining state) */
-  currentTransform?: d3.ZoomTransform;
+  /** Current zoom level (for maintaining state) */
+  currentZoom?: number;
   /** Loading state for data fetching */
   isLoading?: boolean;
   /** Error state for data fetching */
@@ -90,8 +89,8 @@ export interface ChartEventHandlers {
   onLiveModeToggle?: (isLive: boolean) => void;
   /** Called when user manually interacts with chart */
   onUserInteraction?: () => void;
-  /** Called when zoom/pan state changes */
-  onZoomChange?: (transform: d3.ZoomTransform) => void;
+  /** Called when zoom state changes */
+  onZoomChange?: (zoomLevel: number) => void;
   /** Called when user hovers over data point */
   onDataPointHover?: (dataPoint: ChartDataPoint | null) => void;
 }

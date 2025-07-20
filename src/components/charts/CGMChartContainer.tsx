@@ -69,7 +69,7 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
     setUserHasInteracted,
   } = useChartState({
     initialTimeRange: '3h',
-    initialLiveMode: true,
+    initialLiveMode: false, // NUCLEAR: Disable live mode
   });
 
   // Chart preferences
@@ -160,24 +160,26 @@ export const CGMChartContainer: React.FC<CGMChartContainerProps> = ({
             onLiveModeToggle={handleLiveModeToggle}
             onRefresh={autoFetch ? handleRefresh : undefined}
             isLoading={isLoading}
-            nextRefreshIn={nextRefreshIn}
+            nextRefreshIn={0} // Don't pass the countdown to prevent re-renders
             showRefreshControls={autoFetch}
           />
         </Box>
       )}
 
-      {/* Chart */}
-      <RechartsTimeSeriesChart
-        data={chartData}
-        height={height}
-        isLoading={isLoading}
-        error={errorMessage}
-        showTargetRange={showTargetRange}
-        targetRange={targetRange}
-        timeRange={selectedTimeRange}
-      />
+      {/* Chart - Completely isolated from timer updates */}
+      <Box sx={{ isolation: 'isolate' }}>
+        <RechartsTimeSeriesChart
+          data={chartData}
+          height={height}
+          isLoading={isLoading}
+          error={errorMessage}
+          showTargetRange={showTargetRange}
+          targetRange={targetRange}
+          timeRange={selectedTimeRange}
+        />
+      </Box>
     </Stack>
   );
 };
 
-export default CGMChartContainer;
+export default React.memo(CGMChartContainer);

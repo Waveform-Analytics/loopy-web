@@ -74,7 +74,7 @@ const formatCountdown = (seconds: number): string => {
 /**
  * Time Range Selector Component
  */
-export const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
+export const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = React.memo(({
   selectedRange,
   onRangeChange,
   isLiveMode = false,
@@ -257,7 +257,7 @@ export const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
       )}
     </Box>
   );
-};
+});
 
 /**
  * Simplified time range selector for minimal UI

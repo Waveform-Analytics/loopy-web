@@ -116,7 +116,7 @@ const CustomTooltip = React.memo(({ active, payload, label }: any) => {
 /**
  * Main Recharts Time Series Chart Component
  */
-export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = ({
+export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = React.memo(({
   data,
   height = 400,
   isLoading = false,
@@ -127,6 +127,9 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
 }) => {
   // Process data for Recharts
   const chartData = useMemo(() => processChartData(data), [data]);
+  
+  // Generate a stable key based on data length and time range
+  const chartKey = useMemo(() => `${chartData.length}-${timeRange}`, [chartData.length, timeRange]);
 
   // Calculate Y-axis domain with padding and minimum range
   const yDomain = useMemo(() => {
@@ -136,13 +139,17 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
     const min = Math.min(...values);
     const max = Math.max(...values);
     
+    // Always include target range in the domain
+    const domainMin = Math.min(min, targetRange.low);
+    const domainMax = Math.max(max, targetRange.high);
+    
     // Enforce minimum range of 50 mg/dL
     const minRange = 50;
-    const dataRange = max - min;
+    const dataRange = domainMax - domainMin;
     
     if (dataRange < minRange) {
       // Center the data with minimum range
-      const center = (min + max) / 2;
+      const center = (domainMin + domainMax) / 2;
       const halfRange = minRange / 2;
       return [
         Math.max(40, Math.floor(center - halfRange)),
@@ -153,15 +160,33 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
     // Normal padding for varied data
     const padding = dataRange * 0.1;
     return [
-      Math.max(40, Math.floor(min - padding)),
-      Math.min(400, Math.ceil(max + padding))
+      Math.max(40, Math.floor(domainMin - padding)),
+      Math.min(400, Math.ceil(domainMax + padding))
     ];
-  }, [chartData]);
+  }, [chartData, targetRange]);
 
   // Custom X-axis tick formatter - memoized to prevent flickering
   const formatXAxisTick = useCallback((tickItem: any) => {
     return format(new Date(tickItem), 'HH:mm');
   }, []);
+
+  // Custom Y-axis tick formatter - memoized to prevent flickering
+  const formatYAxisTick = useCallback((value: any) => {
+    return Math.round(value).toString();
+  }, []);
+
+  // Pre-calculate explicit ticks for time axis to prevent flickering
+  const xAxisTicks = useMemo(() => {
+    if (!chartData.length) return [];
+    
+    const dataLength = chartData.length;
+    const maxTicks = 6; // Limit number of ticks
+    const step = Math.max(1, Math.floor(dataLength / maxTicks));
+    
+    return chartData
+      .filter((_, index) => index % step === 0 || index === dataLength - 1)
+      .map(d => d.timestamp);
+  }, [chartData]);
 
   // Loading state
   if (isLoading) {
@@ -199,13 +224,13 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
   }
 
   return (
-    <Paper elevation={1} sx={{ width: '100%', height, p: 2 }}>
+    <Paper elevation={1} sx={{ width: '100%', height, p: 2, overflow: 'hidden' }}>
       <Typography variant="h6" gutterBottom>
         Glucose Levels - {timeRange}
       </Typography>
       
-      <ResponsiveContainer width="100%" height={height - 80}>
-        <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+      <Box sx={{ width: '100%', height: height - 80, position: 'relative' }}>
+        <LineChart width={800} height={height - 80} data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
           
           {/* Target range area */}
@@ -241,17 +266,19 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
           <XAxis
             dataKey="timestamp"
             type="number"
-            scale="time"
-            domain={['dataMin', 'dataMax']}
+            domain={['auto', 'auto']}
+            ticks={xAxisTicks}
             tickFormatter={formatXAxisTick}
-            interval="preserveStartEnd"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, textAnchor: 'middle' }}
+            tickMargin={10}
+            interval={0}
+            height={60}
           />
           
           <YAxis
             domain={yDomain}
             tick={{ fontSize: 12 }}
-            tickFormatter={(value) => Math.round(value).toString()}
+            tickFormatter={formatYAxisTick}
             label={{ 
               value: 'Glucose (mg/dL)', 
               angle: -90, 
@@ -273,9 +300,9 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
             isAnimationActive={false}
           />
         </LineChart>
-      </ResponsiveContainer>
+      </Box>
     </Paper>
   );
-};
+});
 
 export default RechartsTimeSeriesChart;

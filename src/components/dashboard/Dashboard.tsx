@@ -4,7 +4,7 @@
  * Combines CGM chart, current reading, and other dashboard elements
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Container,
@@ -71,7 +71,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // Real-time CGM data with alerts
   const cgmData = useRealtimeCGM({
     hours: 24,
-    refreshInterval: 5 * 60 * 1000, // 5 minutes
+    refreshInterval: 0, // NUCLEAR: Disable auto-refresh
     fetchOnMount: true,
     alertThresholds: {
       low: 70,
@@ -122,6 +122,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
     cgmData.refresh();
     showSnackbar('Refreshing glucose data...', 'info');
   }, [cgmData, showSnackbar]);
+  
+  // Memoize the data to prevent unnecessary re-renders
+  const memoizedCGMData = useMemo(() => cgmData.data, [cgmData.data]);
 
   // Data point hover handler
   const handleDataPointHover = useCallback((dataPoint: ChartDataPoint | null) => {
@@ -219,7 +222,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <Box sx={{ flexGrow: 1 }}>
               <CGMChartContainer
                 height={getChartHeight()}
-                data={cgmData.data}
+                data={memoizedCGMData}
                 autoFetch={false} // We're handling data fetching at dashboard level
                 showTimeRangeSelector={true}
                 showTargetRange={true}

@@ -56,8 +56,15 @@ async function retryRequest<T>(
 }
 
 function normalizeTrend(direction: string, trend: number): 'up' | 'down' | 'stable' {
-  if (direction.toLowerCase().includes('up') || trend > 4) return 'up';
-  if (direction.toLowerCase().includes('down') || trend < 4) return 'down';
+  // Use the direction string as primary source if available
+  const dir = direction.toLowerCase();
+  if (dir.includes('up') || dir.includes('rising')) return 'up';
+  if (dir.includes('down') || dir.includes('falling') || dir.includes('dropping')) return 'down';
+  if (dir.includes('flat') || dir.includes('stable')) return 'stable';
+  
+  // Fallback to trend number (CGM standard: 1-3=down, 4=flat, 5-7=up)
+  if (trend <= 3) return 'down';
+  if (trend >= 5) return 'up';
   return 'stable';
 }
 

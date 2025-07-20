@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Refactor CGM chart and reading components; enhance UI with live data updates, countdown timer, and time range controls">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CurrentReading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CurrentReading.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SimpleCGMChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SimpleCGMChart.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Update CurrentReading layout and chart styling" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,7 +59,7 @@
       <workItem from="1752794032661" duration="158000" />
       <workItem from="1752794257773" duration="504000" />
       <workItem from="1752794829544" duration="37156000" />
-      <workItem from="1752953105400" duration="18067000" />
+      <workItem from="1752953105400" duration="18560000" />
     </task>
     <task id="LOCAL-00001" summary="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies.">
       <option name="closed" value="true" />
@@ -241,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753032521650</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Update CurrentReading layout and chart styling">
+      <option name="closed" value="true" />
+      <created>1753033382823</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1753033382823</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -282,6 +286,7 @@
     <MESSAGE value="Remove unused `Typography` import from `App.tsx`." />
     <MESSAGE value="Adjust CGM data range from 24h to 3h for improved live update responsiveness." />
     <MESSAGE value="Refactor CGM chart and reading components; enhance UI with live data updates, countdown timer, and time range controls" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor CGM chart and reading components; enhance UI with live data updates, countdown timer, and time range controls" />
+    <MESSAGE value="Update CurrentReading layout and chart styling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update CurrentReading layout and chart styling" />
   </component>
 </project>

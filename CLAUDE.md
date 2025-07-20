@@ -21,7 +21,8 @@ We've identified that **axis flickering in Recharts is a known issue** with time
 ### Phase 2: Data Layer 📊
 **Goal**: Reliable data fetching and state management
 - ✅ Custom React hooks for CGM data fetching
-- ✅ Real-time data updates with proper intervals
+- ✅ **Intelligent polling** - calculates next reading time based on actual data patterns
+- ✅ Real-time data updates with optimized intervals
 - ✅ Error handling and loading states
 - ✅ Data transformation utilities
 - ✅ Mock data for development
@@ -87,7 +88,49 @@ REACT_APP_API_TOKEN=your_bearer_token_here
 - **Base URL**: https://loopy-api-production.up.railway.app
 - **Health Check**: `/api/health`
 - **Current Reading**: `/api/cgm/current`
-- **Historical Data**: `/api/cgm/readings?hours=24`
+- **CGM Status**: `/api/cgm/status`
+- **Historical Data**: `/api/cgm/data?hours=24`
+- **CGM Analysis**: `/api/cgm/analysis/{period}` (period: 24h, week, month)
+
+#### API Response Formats
+
+**Current Reading (`/api/cgm/current`)**:
+```json
+{
+  "current_glucose": 142,
+  "direction": "Flat", 
+  "trend": 4,
+  "timestamp": "2025-01-16T10:30:00.000Z",
+  "minutes_ago": 3.2,
+  "device": "share2",
+  "type": "sgv"
+}
+```
+
+**Historical Data (`/api/cgm/data?hours=24`)**:
+Returns data points and analysis for the specified time period.
+
+## 🧠 INTELLIGENT POLLING SYSTEM
+
+### How It Works
+The dashboard analyzes historical CGM readings to predict when new data will arrive:
+
+1. **Pattern Analysis**: Calculates median interval between actual readings (typically ~5 minutes)
+2. **Next Reading Prediction**: Estimates when the next reading should arrive based on the latest timestamp
+3. **Smart Scheduling**: Sets timers to check for new data just after the expected time (+30s buffer)
+4. **Adaptive Updates**: Recalculates intervals when new data patterns are detected
+
+### Benefits
+- **Reduces API calls**: Only checks when new data is expected, not on fixed intervals
+- **Faster updates**: Gets new data within 30 seconds of availability instead of waiting up to 5 minutes
+- **Pattern-aware**: Adapts to your specific CGM device's timing patterns
+- **Battery efficient**: Minimizes unnecessary network requests
+
+### UI Indicators
+- **Next Check**: Countdown to next expected reading
+- **Expected Time**: Calculated next reading time based on patterns
+- **Interval**: Detected average time between readings
+- **Status**: Shows when last update occurred
 
 ## 🎨 DESIGN PRINCIPLES
 
@@ -123,6 +166,7 @@ Dashboard
 ### Performance Best Practices
 - **React.memo** for expensive components
 - **useCallback** for event handlers passed to charts
+- **Intelligent polling** - schedules updates based on actual CGM reading patterns
 - **Separate timer logic** from chart rendering
 - **Batch state updates** when possible
 

@@ -27,15 +27,15 @@ export class SmartPollingAnalyzer {
 
     // Sort by time (most recent first)
     const sorted = [...readings].sort((a, b) => 
-      new Date(b.dateString || b.datetime).getTime() - 
-      new Date(a.dateString || a.datetime).getTime()
+      new Date(b.timestamp).getTime() - 
+      new Date(a.timestamp).getTime()
     );
 
     // Calculate intervals between last 5 readings for accuracy
     const intervals: number[] = [];
     for (let i = 0; i < Math.min(5, sorted.length - 1); i++) {
-      const current = new Date(sorted[i].dateString || sorted[i].datetime);
-      const previous = new Date(sorted[i + 1].dateString || sorted[i + 1].datetime);
+      const current = new Date(sorted[i].timestamp);
+      const previous = new Date(sorted[i + 1].timestamp);
       const interval = current.getTime() - previous.getTime();
       
       // Only include reasonable intervals (3-8 minutes)
@@ -65,12 +65,12 @@ export class SmartPollingAnalyzer {
     }
 
     const sorted = [...readings].sort((a, b) => 
-      new Date(b.dateString || b.datetime).getTime() - 
-      new Date(a.dateString || a.datetime).getTime()
+      new Date(b.timestamp).getTime() - 
+      new Date(a.timestamp).getTime()
     );
 
     const lastReading = sorted[0];
-    const lastTime = new Date(lastReading.dateString || lastReading.datetime);
+    const lastTime = new Date(lastReading.timestamp);
     const avgInterval = this.getAverageInterval(readings);
     
     const nextTime = new Date(lastTime.getTime() + avgInterval);
@@ -86,14 +86,14 @@ export class SmartPollingAnalyzer {
     if (readings.length < 3) return 0.5;
 
     const sorted = [...readings].sort((a, b) => 
-      new Date(b.dateString || b.datetime).getTime() - 
-      new Date(a.dateString || a.datetime).getTime()
+      new Date(b.timestamp).getTime() - 
+      new Date(a.timestamp).getTime()
     );
 
     const intervals: number[] = [];
     for (let i = 0; i < Math.min(5, sorted.length - 1); i++) {
-      const current = new Date(sorted[i].dateString || sorted[i].datetime);
-      const previous = new Date(sorted[i + 1].dateString || sorted[i + 1].datetime);
+      const current = new Date(sorted[i].timestamp);
+      const previous = new Date(sorted[i + 1].timestamp);
       intervals.push(current.getTime() - previous.getTime());
     }
 

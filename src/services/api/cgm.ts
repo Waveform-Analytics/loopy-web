@@ -1,10 +1,10 @@
 import { apiClient } from './base';
-import { CGMDataResponse, CurrentGlucose } from '@/types';
+import { CGMDataResponse, CurrentReading } from '../../types';
 
 export class CGMApi {
   // Get current glucose reading with trend information
-  async getCurrentGlucose(): Promise<CurrentGlucose> {
-    return apiClient.get<CurrentGlucose>('/api/cgm/current');
+  async getCurrentReading(): Promise<CurrentReading> {
+    return apiClient.get<CurrentReading>('/api/cgm/current');
   }
 
   // Get historical CGM data for specified time period
@@ -48,8 +48,8 @@ export class CGMApi {
     const data = await this.getCGMData(1);
     
     // Limit the results if requested
-    if (data.data.length > limit) {
-      data.data = data.data.slice(-limit);
+    if (data.readings.length > limit) {
+      data.readings = data.readings.slice(-limit);
     }
     
     return data;

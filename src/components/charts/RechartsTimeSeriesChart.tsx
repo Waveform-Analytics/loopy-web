@@ -142,23 +142,23 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
     // If not live mode, show the most recent time range available
     if (isLiveMode) {
       return data.filter(reading => {
-        const readingTime = new Date(reading.dateString || reading.datetime);
+        const readingTime = new Date(reading.timestamp);
         return readingTime >= cutoffTime;
       });
     } else {
       // For non-live mode, show the most recent data in the selected range
       const sortedData = [...data].sort((a, b) => 
-        new Date(b.dateString || b.datetime).getTime() - 
-        new Date(a.dateString || a.datetime).getTime()
+        new Date(b.timestamp).getTime() - 
+        new Date(a.timestamp).getTime()
       );
       
       if (sortedData.length === 0) return [];
       
-      const latestTime = new Date(sortedData[0].dateString || sortedData[0].datetime);
+      const latestTime = new Date(sortedData[0].timestamp);
       const rangeStart = new Date(latestTime.getTime() - (hoursToShow * 60 * 60 * 1000));
       
       return sortedData.filter(reading => {
-        const readingTime = new Date(reading.dateString || reading.datetime);
+        const readingTime = new Date(reading.timestamp);
         return readingTime >= rangeStart;
       });
     }
@@ -166,16 +166,16 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
 
   const chartData: ChartDataPoint[] = useMemo(() => {
     return filteredData.map(reading => {
-      const timestamp = new Date(reading.dateString || reading.datetime).getTime();
+      const timestamp = new Date(reading.timestamp).getTime();
       return {
         timestamp,
-        glucose: reading.sgv,
-        time: new Date(reading.dateString || reading.datetime).toLocaleTimeString([], {
+        glucose: reading.value,
+        time: new Date(reading.timestamp).toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit'
         }),
-        direction: getTrendText(reading.direction),
-        color: getGlucoseColor(reading.sgv)
+        direction: getTrendText(reading.trend || 'stable'),
+        color: getGlucoseColor(reading.value)
       };
     }).sort((a, b) => a.timestamp - b.timestamp);
   }, [filteredData, getTrendText, getGlucoseColor]);
@@ -183,7 +183,7 @@ export const RechartsTimeSeriesChart: React.FC<RechartsTimeSeriesChartProps> = (
   const stats = useMemo(() => {
     if (!filteredData.length) return null;
     
-    const values = filteredData.map(d => d.sgv);
+    const values = filteredData.map(d => d.value);
     const inRange = values.filter(v => v >= 70 && v <= 180).length;
     const average = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
     const timeInRange = Math.round((inRange / values.length) * 100);

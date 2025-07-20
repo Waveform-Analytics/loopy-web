@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AppError } from '@/types';
+import { ApiError } from '../../types';
 
 // Base API configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://loopy-api-production.up.railway.app';
@@ -39,12 +39,12 @@ class BaseApiClient {
       (error) => {
         console.error('❌ API Response Error:', error);
         
-        // Convert axios errors to our AppError format
-        const appError: AppError = {
+        // Convert axios errors to our ApiError format
+        const appError: ApiError = {
           code: error.code || 'UNKNOWN_ERROR',
           message: error.response?.data?.message || error.message || 'An unexpected error occurred',
-          details: error.response?.data?.detail || error.response?.statusText,
-          timestamp: new Date(),
+          status: error.response?.status || 500,
+          timestamp: new Date().toISOString(),
         };
 
         return Promise.reject(appError);

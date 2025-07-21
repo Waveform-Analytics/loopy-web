@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import { CGMDataResponse, CurrentReading, NormalizedCurrentReading, HistoricalDataResponse, HistoricalDataPoint, HealthCheckResponse, TimeRange, CGMReading } from '../types';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://loopy-api-production.up.railway.app';
-const API_TOKEN = process.env.REACT_APP_API_TOKEN;
+const API_TOKEN = process.env.REACT_APP_API_KEY;
 
 // Debug logging (remove in production)
 console.log('API Configuration:', {
@@ -10,7 +10,7 @@ console.log('API Configuration:', {
   hasToken: !!API_TOKEN,
   tokenLength: API_TOKEN?.length,
   tokenPreview: API_TOKEN ? `${API_TOKEN.substring(0, 10)}...` : 'NOT SET',
-  env: process.env.REACT_APP_API_TOKEN ? 'ENV VAR EXISTS' : 'ENV VAR MISSING',
+  env: process.env.REACT_APP_API_KEY ? 'ENV VAR EXISTS' : 'ENV VAR MISSING',
 });
 
 const apiClient = axios.create({

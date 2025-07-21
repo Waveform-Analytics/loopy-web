@@ -3,7 +3,7 @@ import { ApiError } from '../../types';
 
 // Base API configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://loopy-api-production.up.railway.app';
-const API_KEY = process.env.REACT_APP_API_TOKEN || process.env.REACT_APP_API_KEY;
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 // Debug logging
 console.log('BaseApiClient Configuration:', {
@@ -21,7 +21,7 @@ class BaseApiClient {
       timeout: 30000, // 30 second timeout
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
+        ...(API_KEY && { 'Authorization': `Bearer ${API_KEY}` }),
       },
     });
 

@@ -7,6 +7,7 @@ import {
   YAxis,
   CartesianGrid,
   ReferenceArea,
+  ReferenceLine,
   Tooltip,
 } from 'recharts';
 import { Paper, Box, Typography, useTheme, Button, Chip } from '@mui/material';
@@ -84,6 +85,48 @@ const ColoredDot = React.memo((props: any) => {
 });
 
 ColoredDot.displayName = 'ColoredDot';
+
+// Custom active dot component that maintains original color but is larger
+const ColoredActiveDot = React.memo((props: any) => {
+  const { cx, cy, payload } = props;
+  if (!payload || typeof payload.value !== 'number') return null;
+  
+  const getGlucoseColor = (value: number): string => {
+    const thresholds = {
+      urgentLow: 55,
+      low: 70,
+      normal: 180,
+      high: 250,
+    };
+    
+    if (value < thresholds.urgentLow) {
+      return '#d32f2f'; // Red - urgent low
+    } else if (value < thresholds.low) {
+      return '#ed6c02'; // Orange/Yellow - low
+    } else if (value <= thresholds.normal) {
+      return '#2e7d32'; // Green - in range
+    } else if (value <= thresholds.high) {
+      return '#ed6c02'; // Orange/Yellow - high
+    } else {
+      return '#d32f2f'; // Red - really high
+    }
+  };
+  
+  const color = getGlucoseColor(payload.value);
+  
+  return (
+    <circle
+      cx={cx}
+      cy={cy}
+      r={6} // Larger radius for active state
+      fill={color}
+      stroke={color}
+      strokeWidth={2}
+    />
+  );
+});
+
+ColoredActiveDot.displayName = 'ColoredActiveDot';
 
 const timeRangeOptions = ['1h', '3h', '6h', '12h', '24h'];
 
@@ -198,14 +241,6 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
     [timeUntilNext]
   );
 
-  // Debug logging for data
-  console.log(`Chart data for ${timeRange}:`, {
-    dataLength: data.length,
-    yAxisDomain,
-    targetRange: chartConfig.targetRange,
-    hasDataInTargetRange: data.some(d => d.value >= chartConfig.targetRange.min && d.value <= chartConfig.targetRange.max),
-    dataValues: data.map(d => d.value),
-  });
 
   if (data.length === 0) {
     return (
@@ -357,12 +392,7 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
               stroke={chartConfig.colors.glucose}
               strokeWidth={2}
               dot={<ColoredDot />}
-              activeDot={{ 
-                r: 5, 
-                fill: chartConfig.colors.dots, 
-                stroke: chartConfig.colors.glucose, 
-                strokeWidth: 2 
-              }}
+              activeDot={<ColoredActiveDot />}
               animationDuration={0} // Critical: disable animations
               isAnimationActive={false} // Critical: disable animations
             />

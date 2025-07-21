@@ -5,12 +5,6 @@ import { ApiError } from '../../types';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://loopy-api-production.up.railway.app';
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-// Debug logging
-console.log('BaseApiClient Configuration:', {
-  API_BASE_URL,
-  hasKey: !!API_KEY,
-  keyPreview: API_KEY ? `${API_KEY.substring(0, 10)}...` : 'NOT SET',
-});
 
 class BaseApiClient {
   private client: AxiosInstance;
@@ -28,11 +22,7 @@ class BaseApiClient {
     // Request interceptor for logging and additional headers
     this.client.interceptors.request.use(
       (config) => {
-        console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
-          headers: config.headers,
-          hasAuth: !!config.headers?.Authorization,
-          authHeader: config.headers?.Authorization ? String(config.headers.Authorization).substring(0, 20) + '...' : 'NOT SET',
-        });
+        console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
         return config;
       },
       (error) => {

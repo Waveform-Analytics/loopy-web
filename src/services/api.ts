@@ -4,14 +4,6 @@ import { CGMDataResponse, CurrentReading, NormalizedCurrentReading, HistoricalDa
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://loopy-api-production.up.railway.app';
 const API_TOKEN = process.env.REACT_APP_API_KEY;
 
-// Debug logging (remove in production)
-console.log('API Configuration:', {
-  BASE_URL,
-  hasToken: !!API_TOKEN,
-  tokenLength: API_TOKEN?.length,
-  tokenPreview: API_TOKEN ? `${API_TOKEN.substring(0, 10)}...` : 'NOT SET',
-  env: process.env.REACT_APP_API_KEY ? 'ENV VAR EXISTS' : 'ENV VAR MISSING',
-});
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -49,14 +41,6 @@ async function retryRequest<T>(
     } catch (error) {
       lastError = error as AxiosError;
       
-      // Debug logging for 403 errors
-      if ((lastError as AxiosError).response?.status === 403) {
-        console.error('403 Forbidden Error:', {
-          url: (lastError as AxiosError).config?.url,
-          headers: (lastError as AxiosError).config?.headers,
-          response: (lastError as AxiosError).response?.data,
-        });
-      }
 
       if (attempt === config.maxRetries) {
         break;

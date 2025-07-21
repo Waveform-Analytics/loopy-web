@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { NormalizedCurrentReading, CGMDataResponse, TimeRange, ApiError } from '../types';
-import { cgmApi } from '../services/api';
+import cgmApi from '../services/api';
 
 interface UseCGMDataResult {
   currentReading: NormalizedCurrentReading | null;

@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ApiError } from '../../types';
 
 // Base API configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://loopy-api-production.up.railway.app';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://loopy-api-production.up.railway.app';
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 // Debug logging
@@ -28,7 +28,11 @@ class BaseApiClient {
     // Request interceptor for logging and additional headers
     this.client.interceptors.request.use(
       (config) => {
-        console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+        console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
+          headers: config.headers,
+          hasAuth: !!config.headers?.Authorization,
+          authHeader: config.headers?.Authorization?.substring(0, 20) + '...',
+        });
         return config;
       },
       (error) => {

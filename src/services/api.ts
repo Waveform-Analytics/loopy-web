@@ -9,6 +9,8 @@ console.log('API Configuration:', {
   BASE_URL,
   hasToken: !!API_TOKEN,
   tokenLength: API_TOKEN?.length,
+  tokenPreview: API_TOKEN ? `${API_TOKEN.substring(0, 10)}...` : 'NOT SET',
+  env: process.env.REACT_APP_API_TOKEN ? 'ENV VAR EXISTS' : 'ENV VAR MISSING',
 });
 
 const apiClient = axios.create({

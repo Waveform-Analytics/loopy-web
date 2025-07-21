@@ -154,11 +154,18 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
     const maxValue = Math.max(...values);
     const padding = 20;
     
-    return [
+    // Always include the target range in the Y-axis domain
+    const domainMin = Math.min(
       Math.max(50, minValue - padding),
-      Math.min(400, maxValue + padding)
-    ];
-  }, [data]);
+      chartConfig.targetRange.min - 10
+    );
+    const domainMax = Math.max(
+      Math.min(400, maxValue + padding),
+      chartConfig.targetRange.max + 10
+    );
+    
+    return [domainMin, domainMax];
+  }, [data, chartConfig.targetRange]);
 
   // Memoize X-axis domain to prevent flickering
   const xAxisDomain = useMemo(() => {
@@ -286,12 +293,7 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
             data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid 
-              strokeDasharray="3 3" 
-              stroke={chartConfig.colors.grid}
-            />
-            
-            {/* Target Range Background - Green underlay */}
+            {/* Target Range Background - Green underlay (render first so it's behind) */}
             <ReferenceArea
               y1={chartConfig.targetRange.min}
               y2={chartConfig.targetRange.max}
@@ -300,6 +302,12 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
               stroke={chartConfig.colors.targetRange}
               strokeOpacity={0.5}
               strokeWidth={1}
+              ifOverflow="extendDomain"
+            />
+            
+            <CartesianGrid 
+              strokeDasharray="3 3" 
+              stroke={chartConfig.colors.grid}
             />
             
             <XAxis

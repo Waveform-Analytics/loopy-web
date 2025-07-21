@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Fix TypeScript build errors from merge conflicts" />
+    <list default="true" id="0454d00d-ee56-4502-8811-265b4f73091c" name="Changes" comment="Ensure Y-axis includes target range adjustments and update chart rendering order" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -271,7 +271,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add reusable `RechartsTimeSeriesChart` component for glucose trend visualization&#10;&#10;- Implements a time series chart using Recharts to display glucose data with dynamic zoom, filters, and live mode options.&#10;- Adds dependencies for Recharts and supporting libraries.&#10;- Updates `package-lock.json` to reflect new dependencies." />
     <MESSAGE value="Introduce `CLAUDE.md` technical documentation for project structure and development guidelines&#10;&#10;- Adds comprehensive project vision, setup instructions, architectural overview, and API integration details.&#10;- Includes best practices for TypeScript, React, and project organization.&#10;- Outlines feature roadmap and deployment options." />
     <MESSAGE value="Remove `EnhancedTimeSeriesChart` and `SimpleTimeSeriesChart`, refactor `SmartPollingAnalyzer` for optimized polling strategies&#10;&#10;- Deletes legacy chart components in favor of a unified alternative.&#10;- Refines `SmartPollingAnalyzer` with simplified logic and improved efficiency for calculating confidence and intervals." />
     <MESSAGE value="switched over to d3js for the main chart" />
@@ -296,6 +295,7 @@
     <MESSAGE value="Refactor CGM chart and reading components; enhance UI with live data updates, countdown timer, and time range controls" />
     <MESSAGE value="Update CurrentReading layout and chart styling" />
     <MESSAGE value="Fix TypeScript build errors from merge conflicts" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix TypeScript build errors from merge conflicts" />
+    <MESSAGE value="Ensure Y-axis includes target range adjustments and update chart rendering order" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ensure Y-axis includes target range adjustments and update chart rendering order" />
   </component>
 </project>

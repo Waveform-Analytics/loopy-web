@@ -198,6 +198,15 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
     [timeUntilNext]
   );
 
+  // Debug logging for data
+  console.log(`Chart data for ${timeRange}:`, {
+    dataLength: data.length,
+    yAxisDomain,
+    targetRange: chartConfig.targetRange,
+    hasDataInTargetRange: data.some(d => d.value >= chartConfig.targetRange.min && d.value <= chartConfig.targetRange.max),
+    dataValues: data.map(d => d.value),
+  });
+
   if (data.length === 0) {
     return (
       <Paper elevation={2} sx={{ p: 3, height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -290,6 +299,7 @@ export const SimpleCGMChart: React.FC<SimpleCGMChartProps> = React.memo(({
       <Box sx={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
+            key={timeRange} // Force re-render when time range changes
             data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >

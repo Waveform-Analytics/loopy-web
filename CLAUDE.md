@@ -2,11 +2,11 @@
 
 A modern CGM (Continuous Glucose Monitor) dashboard built with React, TypeScript, and Recharts.
 
-## 🎯 PROJECT STATUS: FRESH START 🆕
+## 🎯 PROJECT STATUS: PRODUCTION READY ✅
 
-**Starting Clean After Chart Library Investigation**
+**Compact Mobile-First CGM Dashboard**
 
-We've identified that **axis flickering in Recharts is a known issue** with time-series data that updates frequently. This is a fresh start with lessons learned.
+The dashboard is now fully functional and deployed to production on Vercel with all core features implemented. Key improvements include intelligent polling, flicker-free charts, and a mobile-optimized design.
 
 ## 🚀 IMPLEMENTATION PLAN
 
@@ -52,11 +52,22 @@ We've identified that **axis flickering in Recharts is a known issue** with time
 
 ### Phase 5: Dashboard Integration 🏠
 **Goal**: Complete dashboard with all features
-- ✅ Responsive layout (mobile + desktop)
-- ✅ Real-time glucose monitoring
-- ✅ Alert notifications (snackbar)
-- ✅ Chart + current reading integration
-- ✅ Loading and error states
+- ✅ **Compact mobile-first design** - reduced from 3 cards to 2 cards
+- ✅ **Responsive layout** (mobile + desktop optimized)
+- ✅ **Real-time glucose monitoring** with intelligent polling
+- ✅ **Color-coded glucose values** (red/yellow/green based on thresholds)
+- ✅ **Current time display** with AM/PM format
+- ✅ **Chart + current reading integration**
+- ✅ **Smart trend arrows** using actual API direction data
+- ✅ **Loading and error states** with proper error handling
+
+### Phase 6: Production Deployment 🚀
+**Goal**: Stable production environment
+- ✅ **Vercel deployment** with environment variables configured
+- ✅ **API authentication** working correctly with bearer tokens
+- ✅ **Chart rendering fixes** for production builds (ReferenceArea issues)
+- ✅ **Performance optimizations** and code cleanup
+- ✅ **TypeScript error resolution** for production builds
 
 ## 🛠 TECHNOLOGY STACK
 
@@ -81,8 +92,10 @@ We've identified that **axis flickering in Recharts is a known issue** with time
 Create `.env` file with:
 ```bash
 REACT_APP_API_BASE_URL=https://loopy-api-production.up.railway.app
-REACT_APP_API_TOKEN=your_bearer_token_here
+REACT_APP_API_KEY=your_bearer_token_here
 ```
+
+**Note**: Use `REACT_APP_API_KEY` (not `REACT_APP_API_TOKEN`) to match Vercel environment variables.
 
 ### API Endpoints
 - **Base URL**: https://loopy-api-production.up.railway.app
@@ -163,6 +176,20 @@ Dashboard
 - **Use stable keys** for chart components
 - **Test with live timers** early in development
 
+### Production Build Issues Fixed
+- **ReferenceArea rendering**: Add `key={timeRange}` to LineChart to force re-render
+- **TypeScript errors**: Ensure consistent interface usage across files
+- **Environment variables**: Use consistent naming (`REACT_APP_API_KEY`)
+- **API authentication**: Bearer token format must match API expectations
+
+### Color-Coded Features
+- **Glucose thresholds**: Configurable in `GLUCOSE_THRESHOLDS` constant
+  - Red: < 55 mg/dL (urgent low) or > 250 mg/dL (really high)  
+  - Yellow: 55-69 mg/dL (low) or 181-250 mg/dL (high)
+  - Green: 70-180 mg/dL (normal range)
+- **Chart dots**: Color-coded based on glucose value
+- **Active dots**: Preserve original color but enlarge on hover/selection
+
 ### Performance Best Practices
 - **React.memo** for expensive components
 - **useCallback** for event handlers passed to charts
@@ -203,31 +230,40 @@ npm run lint # Code quality check
 
 ## 🎯 SUCCESS CRITERIA
 
-### Minimum Viable Product (MVP)
-- [ ] Displays current glucose reading
-- [ ] Shows glucose history chart (flicker-free!)
-- [ ] Time range selection works
-- [ ] Mobile responsive
-- [ ] Connects to live API
+### Minimum Viable Product (MVP) ✅
+- ✅ Displays current glucose reading with color coding
+- ✅ Shows glucose history chart (flicker-free!)
+- ✅ Time range selection works (1h, 3h, 6h, 12h, 24h)
+- ✅ Mobile responsive with compact design
+- ✅ Connects to live API with authentication
 
-### Enhanced Features
-- [ ] Real-time updates every 5 minutes
-- [ ] Glucose alerts/notifications
-- [ ] Target range visualization
-- [ ] Trend arrows and analysis
-- [ ] Professional styling
+### Enhanced Features ✅
+- ✅ **Intelligent polling** - updates based on actual CGM timing patterns
+- ✅ **Color-coded glucose alerts** (red/yellow/green visual indicators)
+- ✅ **Target range visualization** with green underlay (70-180 mg/dL)
+- ✅ **Smart trend arrows** using API direction data
+- ✅ **Professional mobile-first styling** with Material-UI
+- ✅ **Real-time countdown** showing time until next reading
+- ✅ **Current time display** with AM/PM format
 
-## 🔄 NEXT STEPS
+## 🔄 DEPLOYMENT NOTES
 
-**For Fresh Start:**
-1. **Clean project setup** - React + TypeScript + Material-UI
-2. **API integration** - Test with live glucose data
-3. **Basic UI components** - Current reading + time selector
-4. **Chart implementation** - Start simple, add features gradually
-5. **Anti-flicker testing** - Verify stability under live updates
+### Vercel Configuration
+1. **Environment Variables Required:**
+   - `REACT_APP_API_BASE_URL` = `https://loopy-api-production.up.railway.app`
+   - `REACT_APP_API_KEY` = `your_bearer_token_here`
 
-**Remember**: Chart stability is the #1 priority. If Recharts flickers, switch to Chart.js immediately.
+2. **Build Settings:**
+   - Framework Preset: Create React App
+   - Build Command: `npm run build`
+   - Output Directory: `build`
+
+### Key Files for Maintenance
+- **Glucose thresholds**: `src/components/CurrentReading.tsx` (lines 37-43)
+- **Chart colors**: `src/components/SimpleCGMChart.tsx` (ColoredDot component)
+- **API configuration**: `src/services/api.ts` and `src/services/api/base.ts`
+- **Polling logic**: `src/hooks/useSmartPolling.ts`
 
 ---
 
-Ready for a clean, flicker-free CGM dashboard! 🚀
+🎉 **Production-ready CGM dashboard with intelligent polling and mobile-first design!** 🚀

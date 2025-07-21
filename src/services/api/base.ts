@@ -31,7 +31,7 @@ class BaseApiClient {
         console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, {
           headers: config.headers,
           hasAuth: !!config.headers?.Authorization,
-          authHeader: config.headers?.Authorization?.substring(0, 20) + '...',
+          authHeader: config.headers?.Authorization ? String(config.headers.Authorization).substring(0, 20) + '...' : 'NOT SET',
         });
         return config;
       },
